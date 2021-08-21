@@ -115,72 +115,72 @@ inst_sort:
 .LFB1:
 	.cfi_startproc
 	endbr64
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
-	movq	%rdi, -24(%rbp)
-	movl	%esi, -28(%rbp)
-	movl	$1, -8(%rbp)
-	jmp	.L9
+	pushq	%rbp				# Save old base pointer in stack frame.
+	.cfi_def_cfa_offset 16		# 
+	.cfi_offset 6, -16			#
+	movq	%rsp, %rbp			# Set rbp <== rsp i.e set new base pointer by assigning rsp to rbp
+	.cfi_def_cfa_register 6		#
+	movq	%rdi, -24(%rbp)		# set rbp-24 <== rdi i.e base address of array num
+	movl	%esi, -28(%rbp)		# set rbp-28 <== esi i.e value of n
+	movl	$1, -8(%rbp)		# set rbp-8 <== 1 i.e variable j = 1
+	jmp	.L9						# Jump unconditionally to .L9
 .L13:
-	movl	-8(%rbp), %eax
-	cltq
-	leaq	0(,%rax,4), %rdx
-	movq	-24(%rbp), %rax
-	addq	%rdx, %rax
-	movl	(%rax), %eax
-	movl	%eax, -4(%rbp)
-	movl	-8(%rbp), %eax
-	subl	$1, %eax
-	movl	%eax, -12(%rbp)
-	jmp	.L10
-.L12:
-	movl	-12(%rbp), %eax
-	cltq
-	leaq	0(,%rax,4), %rdx
-	movq	-24(%rbp), %rax
-	addq	%rdx, %rax
-	movl	-12(%rbp), %edx
-	movslq	%edx, %rdx
-	addq	$1, %rdx
-	leaq	0(,%rdx,4), %rcx
-	movq	-24(%rbp), %rdx
-	addq	%rcx, %rdx
-	movl	(%rax), %eax
-	movl	%eax, (%rdx)
-	subl	$1, -12(%rbp)
+	movl	-8(%rbp), %eax		# Set eax <== M[rbp-8] i.e load value of j
+	cltq						# # Sign Extend eax to rax
+	leaq	0(,%rax,4), %rdx	# set rdx <== rax *4 i.e j * 4
+	movq	-24(%rbp), %rax		# set rax <== M[rbp - 24] i.e array num
+	addq	%rdx, %rax			# add rax <== rax + rdx i.e num + 4*j
+	movl	(%rax), %eax		# assign eax <== M[rax]  i.e value of num[j]
+	movl	%eax, -4(%rbp)		# Set M[rbp-4] <== eax i.e set k = num[j]
+	movl	-8(%rbp), %eax		# set eax <== M[rbp-8] i.e variable j
+	subl	$1, %eax			# Subtract 1 from eax i.e eax <== eax - 1 ( j - 1)
+	movl	%eax, -12(%rbp)		# set M[rbp-12] <== eax i.e put it into varible i
+	jmp	.L10					# Unconditionally jump to .L10
+.L12:				
+	movl	-12(%rbp), %eax		# Set eax <= M[rbp-12] i.e value of i
+	cltq						# Signed Extension of eax to rax
+	leaq	0(,%rax,4), %rdx	# set rdx <== rax *4 i.e i * 4
+	movq	-24(%rbp), %rax		# Set rax <== M[rbp-24] i.e array num
+	addq	%rdx, %rax			# Add rdx to rax i.e rax <== rax + rdx i.e  a +  4*i
+	movl	-12(%rbp), %edx		# Set edx <== M[rbp-12] i.e value of i
+	movslq	%edx, %rdx			# Sign Extension 
+	addq	$1, %rdx			# Add 1 to rdx i.e rdx <= rdx + 1 , which means  (i + 1)
+	leaq	0(,%rdx,4), %rcx	# set rcx <== rdx * 4 i.e (i +1)* 4
+	movq	-24(%rbp), %rdx		# Set rdx = M[rbp-24] i,e array num
+	addq	%rcx, %rdx			# Add rcx to rdx i.e rdx <== rdx + rcx i.e rdx = num + 4*(i+1)
+	movl	(%rax), %eax		# Set eax <== M[rax] i.e Load num[i] 
+	movl	%eax, (%rdx)		# Set M[rdx] = eax i.e num[i+1] = num[i]
+	subl	$1, -12(%rbp)		# Subtract 1 from M[rbp-12] i.e M[rbp-12] = M[rbp-12] - 1 i.e (i--) 
 .L10:
-	cmpl	$0, -12(%rbp)
-	js	.L11
-	movl	-12(%rbp), %eax
-	cltq
-	leaq	0(,%rax,4), %rdx
-	movq	-24(%rbp), %rax
-	addq	%rdx, %rax
-	movl	(%rax), %eax
-	cmpl	%eax, -4(%rbp)
-	jl	.L12
+	cmpl	$0, -12(%rbp)		# Compare  M[rbp-12] i.e value of i is less than 0 .
+	js	.L11					# If the flag is true , jump to .L11
+	movl	-12(%rbp), %eax		# set eax <== M[rbp-12] i.e value of i
+	cltq						# Sign Extension of eax to rax
+	leaq	0(,%rax,4), %rdx	# set rdx <== rax * 4 i.e  i * 4
+	movq	-24(%rbp), %rax		# Set rax <== M[rbp-24] i.e  array num
+	addq	%rdx, %rax			# Add rdx to rax i.e rax <== rax + rdx to get (num + i*4)
+	movl	(%rax), %eax		# Set eax <== M[rax] i.e assign num[i] to eax
+	cmpl	%eax, -4(%rbp)		# Check that M[rbp-4] is less than eax i.e k<num[i] 
+	jl	.L12					# If the flag is true jump to .L12
 .L11:
-	movl	-12(%rbp), %eax
-	cltq
-	addq	$1, %rax
-	leaq	0(,%rax,4), %rdx
-	movq	-24(%rbp), %rax
-	addq	%rax, %rdx
-	movl	-4(%rbp), %eax
-	movl	%eax, (%rdx)
-	addl	$1, -8(%rbp)
+	movl	-12(%rbp), %eax		# Set eax <= M[rbp-12] i.e value of i
+	cltq						# Signed Extension of eax to rax
+	addq	$1, %rax			# Add 1 to rax i.e rax <= rax + 1 (i + 1)
+	leaq	0(,%rax,4), %rdx	# set rdx <== rax * 4 i.e  (i+1) * 4
+	movq	-24(%rbp), %rax		# Set rax<== M[rbp-24] i.e array num
+	addq	%rax, %rdx			# Add rax to rdx i.e rdx <== rax + rdx  i.e (num + 4*(i+1))
+	movl	-4(%rbp), %eax		# Set eax <== M[rbp-4] i.e value of k
+	movl	%eax, (%rdx)		# Set M[rdx] <== eax i.e num[i+1] = k
+	addl	$1, -8(%rbp)		# Add 1 to M[rbp-8] i.e j++
 .L9:
-	movl	-8(%rbp), %eax
-	cmpl	-28(%rbp), %eax
-	jl	.L13
-	nop
-	nop
-	popq	%rbp
-	.cfi_def_cfa 7, 8
-	ret
+	movl	-8(%rbp), %eax		# set eax <== M[rbp-8] i.e value of j
+	cmpl	-28(%rbp), %eax		# Check if M[eax] < M[rbp-28] i.e j<n or not
+	jl	.L13					# If above condition is true, jump (jump less than ~ jl)  to.L13
+	nop							# Do nothing
+	nop							# Do nothing
+	popq	%rbp				# Pop rbp
+	.cfi_def_cfa 7, 8				
+	ret							# pop return address from stack and transfer control back to the return address
 	.cfi_endproc
 .LFE1:
 	.size	inst_sort, .-inst_sort
@@ -190,67 +190,67 @@ bsearch:
 .LFB2:
 	.cfi_startproc
 	endbr64
-	pushq	%rbp
+	pushq	%rbp				# Save old base pointer in stack frame.
 	.cfi_def_cfa_offset 16
 	.cfi_offset 6, -16
-	movq	%rsp, %rbp
+	movq	%rsp, %rbp			# Set rbp <== rsp i.e set new base pointer by assigning rsp to rbp
 	.cfi_def_cfa_register 6
-	movq	%rdi, -24(%rbp)
-	movl	%esi, -28(%rbp)
-	movl	%edx, -32(%rbp)
-	movl	$1, -8(%rbp)
-	movl	-28(%rbp), %eax
-	movl	%eax, -12(%rbp)
+	movq	%rdi, -24(%rbp)		# Set M[rbp-24] <== rdi 
+	movl	%esi, -28(%rbp)		# Set M[rbp-8] <== esi i.e bottom
+	movl	%edx, -32(%rbp)		# Set M[rbp-32] <== edx
+	movl	$1, -8(%rbp)		# Set M[rbp-8] <== 1 i.e bottom = 1
+	movl	-28(%rbp), %eax		# Set eax <== M[rbp-28] i.e fetch value of n 
+	movl	%eax, -12(%rbp)		# Set M[rbp-12] <== eax i.e top = n
 .L18:
-	movl	-8(%rbp), %edx
-	movl	-12(%rbp), %eax
-	addl	%edx, %eax
-	movl	%eax, %edx
-	shrl	$31, %edx
-	addl	%edx, %eax
-	sarl	%eax
-	movl	%eax, -4(%rbp)
-	movl	-4(%rbp), %eax
-	cltq
-	leaq	0(,%rax,4), %rdx
-	movq	-24(%rbp), %rax
-	addq	%rdx, %rax
-	movl	(%rax), %eax
-	cmpl	%eax, -32(%rbp)
-	jge	.L15
-	movl	-4(%rbp), %eax
+	movl	-8(%rbp), %edx		# Set edx <== M[rbp-8] i.e load value of bottom
+	movl	-12(%rbp), %eax		# Set eax <== M[rbp-12] i.e value of top
+	addl	%edx, %eax			# Add edx to eax i.e eax <== eax + edx ( top + bottom)
+	movl	%eax, %edx			# Set edx <== eax
+	shrl	$31, %edx			# Shift the bits in edx to the right 31 bits and store in edx  ?????
+	addl	%edx, %eax			# Add edx to eax i.e eax <== eax + edx
+	sarl	%eax				# Shift the bits in eax to the right i.e (top+bottom)/2
+	movl	%eax, -4(%rbp)		# Set M[rbp-4] <== eax i.e mid = (top+bottom)/2
+	movl	-4(%rbp), %eax		# Set eax <== M[rbp-4] i.e value of mid
+	cltq						# Sign Extend eax to rax
+	leaq	0(,%rax,4), %rdx	# Set rdx <== M[rax * 4]  i.e 4*mid
+	movq	-24(%rbp), %rax		# Set rax <== M[rbp-24] i.e array 'a'
+	addq	%rdx, %rax			# Add rdx to rax i.e rax <== rax + rdx (i.e a + mid*4) 
+	movl	(%rax), %eax		# Set eax <== M[rax] i.e a[mid]
+	cmpl	%eax, -32(%rbp)		# Compare eax with M[rbp-32] i.e a[mid] with item by doing item - a[mid]
+	jge	.L15					# if the above greater than equal condition is true, jump to .L15
+	movl	-4(%rbp), %eax			
 	subl	$1, %eax
 	movl	%eax, -12(%rbp)
 	jmp	.L16
 .L15:
-	movl	-4(%rbp), %eax
-	cltq
-	leaq	0(,%rax,4), %rdx
-	movq	-24(%rbp), %rax
-	addq	%rdx, %rax
-	movl	(%rax), %eax
-	cmpl	%eax, -32(%rbp)
-	jle	.L16
+	movl	-4(%rbp), %eax		# Set eax <== M[rbp-4] i.e mid
+	cltq						# Sign Extend eax to rax
+	leaq	0(,%rax,4), %rdx	# Set rdx <== M[rax * 4] i.e 4*mid
+	movq	-24(%rbp), %rax		# Set rax <== M[rbp-24] i.e the array 'a'
+	addq	%rdx, %rax			# Add rdx to rax i.e rax <== rax + rdx ( a + 4*mid )
+	movl	(%rax), %eax		# Set eax <== M[rax] i.e value of a[mid]
+	cmpl	%eax, -32(%rbp)		# Compare eax with M[rbp] i.e item with a[mid] by doing item -a[mid]
+	jle	.L16					# If it is less than equal, jump to .L16 
 	movl	-4(%rbp), %eax
 	addl	$1, %eax
 	movl	%eax, -8(%rbp)
 .L16:
-	movl	-4(%rbp), %eax
-	cltq
-	leaq	0(,%rax,4), %rdx
-	movq	-24(%rbp), %rax
-	addq	%rdx, %rax
-	movl	(%rax), %eax
-	cmpl	%eax, -32(%rbp)
-	je	.L17
-	movl	-8(%rbp), %eax
-	cmpl	-12(%rbp), %eax
-	jle	.L18
+	movl	-4(%rbp), %eax		# Set eax <== M[rbp-4] i.e mid
+	cltq						# Sign Extend eax to rax	
+	leaq	0(,%rax,4), %rdx	# Set rdx <== rax *4 i.e 4*mid
+	movq	-24(%rbp), %rax		# Set rax <== M[rbp-24] i.e array 'a'
+	addq	%rdx, %rax			# Add rdx to rax i.e rax <== rax + rdx i.e  a + 4* mid
+	movl	(%rax), %eax		# Set eax <== M[rax] i.e value of a[mid]
+	cmpl	%eax, -32(%rbp)		# Compare eax with M[rbp-32] i.e item with a[mid]
+	je	.L17					# If the above compares them as equal then jump equal to .L17
+	movl	-8(%rbp), %eax		# Set eax <== M[rbp-8] i.e value of bottom
+	cmpl	-12(%rbp), %eax		# Compare eax with M[rbp-12] i.e top with bottom by doing bottom-top
+	jle	.L18					# If bottom-top less than equals 0 , then jump less than equal to .L18
 .L17:
-	movl	-4(%rbp), %eax
-	popq	%rbp
+	movl	-4(%rbp), %eax		# Set eax <== M[rbp-4] i.e value of mid
+	popq	%rbp				# Pop base pointer
 	.cfi_def_cfa 7, 8
-	ret
+	ret							# pop return address from stack and transfer control back to the return address
 	.cfi_endproc
 .LFE2:
 	.size	bsearch, .-bsearch
