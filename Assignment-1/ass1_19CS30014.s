@@ -28,12 +28,12 @@ main:
 	movq	%rsp, %rbp				# rbp <-- rsp, set new base pointer by assigning rsp to rbp
 	.cfi_def_cfa_register 6			
 	subq	$432, %rsp				# Create 432 bytes space for local variables and array 
-	movq	%fs:40, %rax			# Segment addressing
-	movq	%rax, -8(%rbp)			# M[rbp-8] <-- rax
+	movq	%fs:40, %rax			# Segment addressing, Get the canary
+	movq	%rax, -8(%rbp)			# M[rbp-8] <-- rax, Save it as a local var
 	xorl	%eax, %eax				# Clear eax by xoring it with itself. In other words set it to 0.
 	leaq	.LC0(%rip), %rdi		# rdi <-- string defined by .LC0,it uses rip relative addressing, rdi being the first argument of the function (here printf)
 	call	puts@PLT				# Call puts for printing .LC0, equivalent to the code printf("Enter how many elements you want:\n");
-	leaq	-432(%rbp), %rax		# rax <-- (rbp-432) i.e Load the address of variable n into rax
+	leaq	-432(%rbp), %rax		# rax <-- (rbp-432) i.e store the address of variable n into rax
 	movq	%rax, %rsi				# rsi <-- rax, set second parameter for calling scanf
 	leaq	.LC1(%rip), %rdi		# rdi <-- string of .LC1, uses rip relative addressing, rdi is the first argument of the function (here scanf)
 	movl	$0, %eax				# eax <-- 0 
@@ -46,18 +46,18 @@ main:
 	movl	$0, -424(%rbp)			# Set M[rbp-424] <-- 0 (Assign variable i = 0)
 	jmp	.L2							# Unconditional jump , i.e transfer program control to .L2
 .L3:
-	leaq	-416(%rbp), %rax		# Assign rax <-- (rbp-416) i.e base address of 'a' array is loaded into rax.
-	movl	-424(%rbp), %edx		# Assign edx <-- M[rbp-424] i.e value of variable i is loaded into edx
+	leaq	-416(%rbp), %rax		# Assign rax <-- (rbp-416) i.e base address of 'a' array is stored into rax.
+	movl	-424(%rbp), %edx		# Assign edx <-- M[rbp-424] i.e value of variable i is stored into edx
 	movslq	%edx, %rdx				# Sign Extension(32 to 64 bit) of value stored in edx to rdx. rdx <-- edx
 	salq	$2, %rdx				# Left shift twice for rdx i.e it is doing rdx <-- 4*i
 	addq	%rdx, %rax				# Add rdx to rax i.e. rax <-- rax + 4*i or a + 4*i i.e, rax stores the address of a[i] 
-	movq	%rax, %rsi				# Assign rsi <-- rax (32 to 64 bit)
+	movq	%rax, %rsi				# Assign rsi <-- rax (rsi = rax)
 	leaq	.LC1(%rip), %rdi		# rdi <-- string of .LC1, uses rip relative addressing and rdi is the first argument of the function (here scanf)
 	movl	$0, %eax				# Set eax <-- 0,corresponding to return 0
 	call	__isoc99_scanf@PLT		# Call scanf to read i-th element of array 'a'. 
 	addl	$1, -424(%rbp)			# Add 1 to M[rbp-424] , i.e add 1 to variable i (i++) .
 .L2:
-	movl	-432(%rbp), %eax		# assign eax <--M[rbp-432] i.e,Load the value of variable n.
+	movl	-432(%rbp), %eax		# assign eax <--M[rbp-432] i.e,store the value of variable n.
 	cmpl	%eax, -424(%rbp)		# Compare whether M[rbp-424] is less than M[eax] (i.e i < n condition is being checked)
 	jl	.L3							# if the condition in the previous line satisfies, jump to .L3 (jl represents jump less than)
 	movl	-432(%rbp), %edx		# Assign edx <-- M[rbp-432] i.e value of the variable n
@@ -68,7 +68,7 @@ main:
 	leaq	.LC3(%rip), %rdi		# rdi <-- string of .LC3, uses rip relative addressing, rdi is the first argument of the function (here printf)
 	call	puts@PLT				# call the puts function for printf operation.
 	leaq	-428(%rbp), %rax		# Set rax <-- (rbp-428) i.e address of variable item
-	movq	%rax, %rsi				# Set  rsi <-- rax i.e value stored at rax is loaded into rsi (i.e value of variable item)
+	movq	%rax, %rsi				# Set  rsi <-- rax i.e value stored at rax is stored into rsi (i.e value of variable item)
 	leaq	.LC1(%rip), %rdi		# rdi <-- string of .LC1, uses rip relative addressing, rdi is the first argument of the function (here scanf)
 	movl	$0, %eax				# Set eax <-- 0,corresponds to return 0 
 	call	__isoc99_scanf@PLT		# call scanf to take input of the variable item
@@ -86,7 +86,7 @@ main:
 	cmpl	%eax, %edx				# Compare eax and edx i.e value of item and value of a[loc] (Corresponds to C code loc == a[item])
 	jne	.L4							# If the above condition is false, jump to L4 (jne is jump not equals to)
 	movl	-420(%rbp), %eax		# Set eax <-- M[rbp-420] i.e value of variable loc
-	leal	1(%rax), %edx			# Set edx <-- (M[rax] + 1) i.e value of variable a + 1
+	leal	1(%rax), %edx			# Set edx <-- (M[rax] + 1) i.e value of variable loc + 1
 	movl	-428(%rbp), %eax		# Set eax <-- M[rbp-428] i.e value of item
 	movl	%eax, %esi				# Set esi <-- eax,Assign the second parameter for function call of printf 
 	leaq	.LC4(%rip), %rdi		# rdi <-- string of .LC4, uses rip relative addressing, rdi is the first argument of the function (here printf)
@@ -98,8 +98,8 @@ main:
 	call	puts@PLT				# call printf to print the .LC5 string
 .L5:	
 	movl	$0, %eax				# Set eax <-- 0
-	movq	-8(%rbp), %rcx			# Set rcx <-- M[rbp-8]
-	xorq	%fs:40, %rcx			# Check if equal to the original value
+	movq	-8(%rbp), %rcx			# Set rcx <-- M[rbp-8], rcx = Canary
+	xorq	%fs:40, %rcx			# Check if rcx equal to the original value
 	je	.L7							# if equal,jump to .L7
 	call	__stack_chk_fail@PLT	# Check Stack (__stack_chk_fail is noreturn)
 .L7:
@@ -125,14 +125,14 @@ inst_sort:
 	movl	$1, -8(%rbp)		# set M[rbp-8] <-- 1 i.e variable j = 1
 	jmp	.L9						# Jump unconditionally to .L9
 .L13:
-	movl	-8(%rbp), %eax		# Set eax <-- M[rbp-8] i.e load value of j to eax
+	movl	-8(%rbp), %eax		# Set eax <-- M[rbp-8] i.e store value of j to eax
 	cltq						# Sign Extension of eax to rax (32bit to 64bit)
 	leaq	0(,%rax,4), %rdx	# set rdx <-- rax *4 i.e, j * 4
 	movq	-24(%rbp), %rax		# set rax <-- M[rbp - 24] that is store base address of array num to rax
 	addq	%rdx, %rax			# add rax <-- rax + rdx i.e num + 4*j which is the address of the element num[j] 
 	movl	(%rax), %eax		# assign eax <-- M[rax]  i.e value of num[j]
 	movl	%eax, -4(%rbp)		# Set M[rbp-4] <-- eax i.e set k = num[j]
-	movl	-8(%rbp), %eax		# set eax <-- M[rbp-8] i.e load value of variable j into eax
+	movl	-8(%rbp), %eax		# set eax <-- M[rbp-8] i.e store value of variable j into eax
 	subl	$1, %eax			# Subtract 1 from eax i.e eax <-- eax - 1 ( j - 1)
 	movl	%eax, -12(%rbp)		# set M[rbp-12] <-- eax i.e put j - 1 into varible i ( i = j - 1 )
 	jmp	.L10					# Unconditionally jump to .L10
@@ -148,7 +148,7 @@ inst_sort:
 	leaq	0(,%rdx,4), %rcx	# set rcx <-- rdx * 4 i.e (i +1)* 4
 	movq	-24(%rbp), %rdx		# Set rdx <-- M[rbp-24] i,e base address of array num is stored in rdx
 	addq	%rcx, %rdx			# Add rcx to rdx i.e rdx <-- rdx + rcx i.e rdx = num + 4*(i+1)
-	movl	(%rax), %eax		# Set eax <-- M[rax] i.e Load value of num[i] 
+	movl	(%rax), %eax		# Set eax <-- M[rax] i.e store value of num[i] 
 	movl	%eax, (%rdx)		# Set M[rdx] <-- eax i.e num[i+1] = num[i]
 	subl	$1, -12(%rbp)		# Subtract 1 from M[rbp-12] i.e M[rbp-12] = M[rbp-12] - 1 i.e (i--) 
 .L10:
@@ -176,8 +176,8 @@ inst_sort:
 	movl	-8(%rbp), %eax		# set eax <-- M[rbp-8] i.e set eax to value of j
 	cmpl	-28(%rbp), %eax		# Check if M[eax] < M[rbp-28] i.e whether j < n
 	jl	.L13					# If above condition is true, jump (jl means jump less than)  to.L13
-	nop							# Do nothing
-	nop							# Do nothing
+	nop							# Do nothing (No operation)
+	nop							# Do nothing (No operation)
 	popq	%rbp				# Pop rbp
 	.cfi_def_cfa 7, 8				
 	ret							# pop return address from stack and transfer control back to the return address
@@ -202,12 +202,12 @@ bsearch:
 	movl	-28(%rbp), %eax		# Set eax <-- M[rbp-28] i.e assign eax to value of n 
 	movl	%eax, -12(%rbp)		# Set M[rbp-12] <-- eax i.e assign top = n
 .L18:
-	movl	-8(%rbp), %edx		# Set edx <-- M[rbp-8] i.e load value of bottom in edx
-	movl	-12(%rbp), %eax		# Set eax <-- M[rbp-12] i.e load value of top in eax
+	movl	-8(%rbp), %edx		# Set edx <-- M[rbp-8] i.e store value of bottom in edx
+	movl	-12(%rbp), %eax		# Set eax <-- M[rbp-12] i.e store value of top in eax
 	addl	%edx, %eax			# Add edx to eax i.e eax <-- eax + edx (so it is doing top + bottom)
-	movl	%eax, %edx			# Set edx <-- eax
-	shrl	$31, %edx			# Shift the bits in edx to the right 31 bits and store in edx
-	addl	%edx, %eax			# Add edx to eax i.e eax <-- eax + edx
+	movl	%eax, %edx			# Assign edx <-- eax
+	shrl	$31, %edx			# Shift the bits in edx to the right 31 bits and store in edx,( This is getting the sign bit(MSB) of edx i.e sign bit of 32 bit representation of (top+bottom))
+	addl	%edx, %eax			# Add edx to eax i.e eax <-- eax + edx (Add the signed bit to the value of (top+bottom))
 	sarl	%eax				# Shift the bits in eax to the right i.e (top+bottom)/2
 	movl	%eax, -4(%rbp)		# Set M[rbp-4] <-- eax i.e mid = (top+bottom)/2
 	movl	-4(%rbp), %eax		# Set eax <-- M[rbp-4] i.e value of mid is stored in eax
@@ -218,12 +218,12 @@ bsearch:
 	movl	(%rax), %eax		# Set eax <-- M[rax] i.e assign eax = a[mid]
 	cmpl	%eax, -32(%rbp)		# Compare eax with M[rbp-32] i.e a[mid] with item by doing item - a[mid]
 	jge	.L15					# if the above greater than equal condition (item-a[mid]>=0) is true, jump to .L15 (jge = jump greater than equals),
-	movl	-4(%rbp), %eax		# Set eax <-- M[rbp-4] i.e, load value of variable mid to eax 
+	movl	-4(%rbp), %eax		# Set eax <-- M[rbp-4] i.e, store value of variable mid to eax 
 	subl	$1, %eax			# Subtract 1 from the value of eax i.e eax <-- eax - 1(equivalent to mid - 1)  
 	movl	%eax, -12(%rbp)		# Set M[rbp-12] <-- eax i.e assigning top = mid - 1
 	jmp	.L16					# Unconditionally jump to .L16
 .L15:
-	movl	-4(%rbp), %eax		# Set eax <-- M[rbp-4] i.e value of mid is loaded in eax
+	movl	-4(%rbp), %eax		# Set eax <-- M[rbp-4] i.e value of mid is stored in eax
 	cltq						# Sign Extend eax to rax(32 bit to 64 bit)
 	leaq	0(,%rax,4), %rdx	# Set rdx <-- rax * 4 i.e 4*mid
 	movq	-24(%rbp), %rax		# Set rax <-- M[rbp-24] i.e the base address of array 'a' is stored in rax
@@ -231,9 +231,9 @@ bsearch:
 	movl	(%rax), %eax		# Set eax <-- M[rax] i.e assign eax to value of a[mid]
 	cmpl	%eax, -32(%rbp)		# Compare eax with M[rbp] i.e item with a[mid] by doing item -a[mid]
 	jle	.L16					# If item - a[mid] is less than equal to 0, jump to .L16 
-	movl	-4(%rbp), %eax		# Set eax <-- M[rbp-4] i.e load value of variable 'mid' in eax
+	movl	-4(%rbp), %eax		# Set eax <-- M[rbp-4] i.e store value of variable 'mid' in eax
 	addl	$1, %eax			# Add 1 to eax i.e value of mid + 1 is stored in eax 
-	movl	%eax, -8(%rbp)		# Set M[rbp - 8] <-- eax i.e bottom is assigned mid - 1 (bottom = mid - 1) 
+	movl	%eax, -8(%rbp)		# Set M[rbp - 8] <-- eax i.e bottom is assigned mid + 1 (bottom = mid + 1) 
 .L16:
 	movl	-4(%rbp), %eax		# Set eax <-- M[rbp-4] i.e value of variable mid
 	cltq						# Sign Extend eax to rax (32 bit to 64 bit)	
