@@ -1,9 +1,16 @@
+/*******************************
+Name - Debanjan Saha
+Roll - 19CS30014
+Assignment No. - 2
+Semester No.- 5
+CS39003
+*******************************/
 #include "myl.h"
 
 int main(){
 
     int choice,ret = -1;
-    int n = 0.0;
+    int n = 0;
     float f = 0.0;
     printStr("< Welcome to Debanjan's Toy Library />\n\n");
     printStr("You will be given some choices. Please choose one :-)");
@@ -36,7 +43,10 @@ int main(){
         } else if (choice == 2){
             
             printStr("\nYour last given input integer was: ");
-            printInt(n);
+            ret = printInt(n);
+            printStr("\n");
+            printStr("Characters Printed = ");
+            printInt(ret);    
             printStr("\n");
 
         } else if( choice == 3){
@@ -51,10 +61,13 @@ int main(){
 
         } else if( choice == 4){
             printStr("\nYour last given input was: ");
-            printFlt(f);
+            ret = printFlt(f);
+            printStr("\n");
+            printStr("Characters Printed = ");
+            printInt(ret);    
             printStr("\n");
         } else {
-            printStr("Please Check your choice. It is invalid !\n");
+            printStr("\nPlease Check your choice. It is invalid !\n");
         }
     }
 
