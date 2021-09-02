@@ -1,5 +1,10 @@
 # Makefile Instructions
 
+> Recompile the Project and Run the executable altogether
+```
+make
+```
+
 > Make the executable program
 ```
 make a.out
@@ -12,6 +17,6 @@ make run
 
 > Clean The Project Directory By removing files other than source codes
 ```
-make autoclean
+make clean
 ```
 
