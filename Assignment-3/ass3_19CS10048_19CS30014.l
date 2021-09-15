@@ -9,16 +9,15 @@
     #define CONSTANT 3
     #define STRING_LITERAL 4
     #define PUNCTUATOR 5
-    #define MULTI_COMMENT_START 6
-    #define MULTI_COMMENT_END 7
-    #define MULTI_COMMENT 8
-    #define SINGLE_COMMENT_START 9
-    #define SINGLE_COMMENT 10
-    #define SINGLE_COMMENT_END 11
+    #define MULTI_LINE_COMMENT_START 6
+    #define MULTI_LINE_COMMENT_END 7
+    #define MULTI_LINE_COMMENT_BODY 8
+    #define SINGLE_LINE_COMMENT_START 9
+    #define SINGLE_LINE_COMMENT_BODY 10
+    #define SINGLE_LINE_COMMENT_END 11
     #define INTEGER_CONSTANT 12
     #define FLOATING_CONSTANT 13
     #define CHARACTER_CONSTANT 14
-    #define ENUMERATION_CONSTANT 15
 %}
 
 %x  COMMENT
@@ -65,13 +64,13 @@ PUNCTUATOR              "["|"]"|"("|")"|"{"|"}"|"."|"->"|"++"|"--"|"&"|"*"|"+"|"
 {CHARACTER_CONSTANT}        { return CHARACTER_CONSTANT; }
 {ESCAPE_SEQUENCE}|" "       { /* Ignore Whitespace and Escape Sequence */ }             
 
-"/*"                        { BEGIN(COMMENT); return MULTI_COMMENT_START; }
-<COMMENT>"*/"               { BEGIN(INITIAL); return MULTI_COMMENT_END; }
-<COMMENT>.                  { return MULTI_COMMENT; }
-<COMMENT>"\n"               { return MULTI_COMMENT; }
+"/*"                        { BEGIN(COMMENT); return MULTI_LINE_COMMENT_START; }
+<COMMENT>"*/"               { BEGIN(INITIAL); return MULTI_LINE_COMMENT_END; }
+<COMMENT>.                  { return MULTI_LINE_COMMENT_BODY; }
+<COMMENT>"\n"               { return MULTI_LINE_COMMENT_BODY; }
 
-"//"                        { BEGIN(SINGLE_LINE_COMMENT); return SINGLE_COMMENT_START; }
-<SINGLE_LINE_COMMENT>"\n"   { BEGIN(INITIAL); return SINGLE_COMMENT_END; }
-<SINGLE_LINE_COMMENT>.      { return SINGLE_COMMENT;}    
+"//"                        { BEGIN(SINGLE_LINE_COMMENT); return SINGLE_LINE_COMMENT_START; }
+<SINGLE_LINE_COMMENT>"\n"   { BEGIN(INITIAL); return SINGLE_LINE_COMMENT_END; }
+<SINGLE_LINE_COMMENT>.      { return SINGLE_LINE_COMMENT_BODY;}    
 
 %%
