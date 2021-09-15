@@ -45,7 +45,7 @@ int main(){
                 break;
 
             case SINGLE_LINE_COMMENT_BODY:
-                printf("<SINGLE_COMMENT_BODY, %d, %s>\n",token, yytext); 
+                printf("<SINGLE_LINE_COMMENT_BODY, %d, %s>\n",token, yytext); 
                 break;
 
             case SINGLE_LINE_COMMENT_END:
