@@ -40,27 +40,27 @@ int main(){
                 printf("<PUNCTUATOR, %d, %s>\n",token, yytext); 
                 break;
 
-            case SINGLE_COMMENT_START:
+            case SINGLE_LINE_COMMENT_START:
                 printf("<SINGLE_LINE_COMMENT_START, %d, %s>\n",token, yytext); 
                 break;
 
-            case SINGLE_COMMENT:
-                printf("<SINGLE_COMMENT_CONTINUE, %d, %s>\n",token, yytext); 
+            case SINGLE_LINE_COMMENT_BODY:
+                printf("<SINGLE_COMMENT_BODY, %d, %s>\n",token, yytext); 
                 break;
 
-            case SINGLE_COMMENT_END:
+            case SINGLE_LINE_COMMENT_END:
                 printf("<SINGLE_LINE_COMMENT_END, %d, %s>\n",token, yytext); 
                 break;
 
-            case MULTI_COMMENT_START:
+            case MULTI_LINE_COMMENT_START:
                 printf("<MULTI_LINE_COMMENT_START, %d, %s>\n",token, yytext); 
                 break;
 
-            case MULTI_COMMENT:
-                printf("<MULTI_LINE_COMMENT_CONTINUE, %d, %s>\n",token, yytext); 
+            case MULTI_LINE_COMMENT_BODY:
+                printf("<MULTI_LINE_COMMENT_BODY, %d, %s>\n",token, yytext); 
                 break;
 
-            case MULTI_COMMENT_END:
+            case MULTI_LINE_COMMENT_END:
                 printf("<MULTI_LINE_COMMENT_END, %d, %s>\n",token, yytext); 
                 break;
 
