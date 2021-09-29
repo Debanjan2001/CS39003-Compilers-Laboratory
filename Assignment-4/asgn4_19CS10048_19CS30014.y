@@ -27,38 +27,53 @@
 %%
 primary_expression: 
                     IDENTIFIER
+                    {printf("| Rule: primary_expression => IDENTIFIER|\n");}
                     | constant
+                    {printf("| Rule: primary_expression => constant |\n");}
                     | STRING_LITERAL
+                    {printf("| Rule: primary_expression => STRING LITERAL |\n");}
                     | '(' expression ')'
-                    {printf("| Rule: primary_expression |\n");}
+                    {printf("| Rule: primary_expression => Parenthesis Expression |\n");}
                     ;
 
 constant: 
             INTEGER_CONSTANT 
+            {printf("| Rule: constant => INTEGER|\n");}
             | FLOATING_CONSTANT 
+            {printf("| Rule: constant => FLOATING-POINT|\n");}
             | CHARACTER_CONSTANT
+            {printf("| Rule: constant => CHARACTER|\n");}
             ;
 
 
 
 postfix_expression: 
                     primary_expression
+                    {printf("| Rule: postfix_expression => primary_expression |\n");}
                     | postfix_expression '[' expression ']'
+                    {printf("| Rule: postfix_expression => postfix_expression [expression] |\n");}
                     | postfix_expression '(' argument_expression_list_opt ')'
+                    {printf("| Rule: postfix_expression => postfix_expression (OPTIONAL : argument expression list) |\n");}
                     | postfix_expression '.' IDENTIFIER
+                    {printf("| Rule: postfix_expression => postfix_expression.IDENTIFIER |\n");}
                     | postfix_expression ARROW IDENTIFIER
+                    {printf("| Rule: postfix_expression => postfix_expression->IDENTIFIER |\n");}
                     | postfix_expression INC
+                    {printf("| Rule: postfix_expression => postfix_expression ++ |\n");}
                     | postfix_expression DEC
+                    {printf("| Rule: postfix_expression => primary_expression -- |\n");}
                     | '(' type_name ')' '{' initializer_list '}'
+                    {printf("| Rule: postfix_expression => (type_name) { initializer_list } |\n");}
                     | '(' type_name ')' '{' initializer_list COMMA '}'
-                    {printf("| Rule: postfix_expression |\n");}
+                    {printf("| Rule: postfix_expression => (type_name) { initializer_list , } |\n");}
                     ;
 
 
 argument_expression_list:
                             assignment_expression
+                            {printf("| Rule: argument_expression_list => assignment_expression |\n");}
                             | argument_expression_list COMMA assignment_expression
-                            {printf("| Rule: argument_expression_list |\n");}
+                            {printf("| Rule: argument_expression_list => argument_expression_list, assignment_expression |\n");}
                             ;
 
 argument_expression_list_opt
@@ -69,28 +84,39 @@ argument_expression_list_opt
 
 unary_expression: 
                     postfix_expression
+                    {printf("| Rule: unary_expression => postfix_expression |\n");}
                     | INC unary_expression
+                    {printf("| Rule: unary_expression => ++ unary_expression |\n");}
                     | DEC unary_expression
+                    {printf("| Rule: unary_expression => -- unary_expression |\n");}
                     | unary_operator cast_expression
+                    {printf("| Rule: unary_expression => unary_operator cast_expression |\n");}
                     | SIZEOF unary_expression
+                    {printf("| Rule: unary_expression => sizeof unary_expression |\n");}
                     | SIZEOF '(' type_name ')'
-                    {printf("| Rule: unary_expression |\n");}
+                    {printf("| Rule: unary_expression => sizeof(typename) |\n");}
                     ;
 
 unary_operator: 
                     BITWISE_AND
+                    {printf("| Rule: unary_expression => & |\n");}
                     | MUL
+                    {printf("| Rule: unary_expression => * |\n");}
                     | ADD
+                    {printf("| Rule: unary_expression => + |\n");}
                     | SUB
+                    {printf("| Rule: unary_expression => - |\n");}
                     | BITWISE_NOT
+                    {printf("| Rule: unary_expression => ~ |\n");}
                     | '!'
-                    { printf("| Rule: unary_operator |\n"); }
+                    { printf("| Rule: unary_operator => ! |\n"); }
                     ;
 
 cast_expression: 
                     unary_expression
+                    {printf("| Rule: cast_expression => unary_expression |\n");}
                     | '(' type_name ')' cast_expression
-                    {printf("| Rule: cast_expression |\n");}
+                    {printf("| Rule: cast_expression =>  (typename) cast_expression |\n");}
                     ;
 
 multiplicative_expression: 
