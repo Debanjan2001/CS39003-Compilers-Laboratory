@@ -48,7 +48,7 @@ extern quadArray Q;
 // denotes the Type ST
 extern basicType bt;
 // denotes count of instr
-extern long long int instr_count;
+//extern long long int instr_count;
 // denotes count of nested tables
 extern long long int table_count;
 // bool for printing debug output
@@ -272,9 +272,9 @@ string convInt2String(int);
 // helper function to convert float to string
 string convFloat2String(float);
 // helper function to convert int expression to boolean
-Expression convInt2Bool(Expression);
+Expression* convInt2Bool(Expression*);
 // helper function to convert boolean expression to int
-Expression convBool2Int(Expression);
+Expression* convBool2Int(Expression*);
 
 // helper function for type conversion
 sym *convertType(sym *, string);
@@ -290,7 +290,7 @@ void changeTable(symtable *);
 // Returns the next instruction number
 int nextinstr();
 // Returns the next instruction number
-void update_nextinstr();
+//void update_nextinstr();
 
 //----------------------------------------------------------------------//
 //           Other helper function for debugging and printing           //
@@ -300,6 +300,6 @@ string printType(symboltype *); // print type of symbol
 void generateSpaces(int);
 
 // Used for printing debugging output
-void debug();
+//void debug();
 
 #endif

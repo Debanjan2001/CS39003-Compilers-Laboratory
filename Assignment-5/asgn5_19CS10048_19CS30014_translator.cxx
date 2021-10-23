@@ -4,7 +4,7 @@
     Roll: 19CS10048 + 19CS30014
 */
 
-#include "ass5_19CS10048_19CS30014_translator.h"
+#include "asgn5_19CS10048_19CS30014_translator.h"
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -24,7 +24,7 @@ long long int table_count; // count of table
 string loop_name;          // get the name of the loop
 vector<label> label_table; // table to store the labels
 // used for debugging
-void printpattern() { cout << ""; }
+//void printpattern() { cout << ""; }
 
 //--------------------------------------------------------------//
 //      Implementation of the Symbol Element Class functions    //
@@ -93,7 +93,7 @@ sym *symtable::lookup(string name) // Lookup an symbol in the symbol table, whet
 	 * Return the pointer to this 
 	 * new element inserted
 	 */
-    if (ST == this and !ptr)
+    if (ST == this && !ptr)
     {
         symbol = new sym(name);
         table.push_back(*symbol); // push the symbol into the table
@@ -604,7 +604,7 @@ int nextinstr()
     return Q.Array.size(); // next instruction will be 1+last index and lastindex=size-1. hence return size
 }
 
-void update_nextinstr()
+/*void update_nextinstr()
 {
     instr_count++;
     if (debug_on == 1)
@@ -613,13 +613,13 @@ void update_nextinstr()
         cout << "Press [ENTER] to continue:";
         cin.get();
     }
-}
+}*/
 
-void debug()
+/*void debug()
 {
     if (debug_on == 1)
         cout << instr_count << endl;
-}
+}*/
 
 /**
  * GENTEMP
@@ -746,7 +746,7 @@ int main()
 
     label_table.clear();
 
-    instr_count = 0;                   // count of instr (used for sanity check)
+    //instr_count = 0;                   // count of instr (used for sanity check)
     table_count = 0;                   // count of nested table
     debug_on = 0;                      // debugging is off
     globalST = new symtable("Global"); // Global Symbol Table
