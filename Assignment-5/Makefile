@@ -18,10 +18,10 @@ lex.yy.c: asgn5_19CS10048_19CS30014.l y.tab.h asgn5_19CS10048_19CS30014_translat
 	flex asgn5_19CS10048_19CS30014.l
 
 y.tab.c: asgn5_19CS10048_19CS30014.y
-	bison -dty asgn5_19CS10048_19CS30014.y -W
+	bison -dty asgn5_19CS10048_19CS30014.y -W --report=all
 
 y.tab.h: asgn5_19CS10048_19CS30014.y
-	bison -dty asgn5_19CS10048_19CS30014.y -W
+	bison -dty asgn5_19CS10048_19CS30014.y -W --report=all
 
 clean: 
 	rm lex.yy.c\
@@ -30,7 +30,7 @@ clean:
 	   y.tab.c\
 	   y.tab.h\
 	   y.tab.o\
-	   asgn5_19CS10048_19CS30014.output\
+	   y.output\
 	   asgn5_19CS10048_19CS30014_translator.o\
 	   asgn5_19CS10048_19CS30014_translator.h.gch\
 	   asgn5_19CS10048_19CS30014_quads1.out
