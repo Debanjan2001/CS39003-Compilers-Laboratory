@@ -1,7 +1,15 @@
 test: a.out
 	./a.out < asgn5_19CS10048_19CS30014_test1.c > asgn5_19CS10048_19CS30014_quads1.out
+	@echo "\nTest File 1 Successfully Translated !\n\n"
+	./a.out < asgn5_19CS10048_19CS30014_test2.c > asgn5_19CS10048_19CS30014_quads2.out
+	@echo "\nTest File 2 Successfully Translated !\n\n"
+	./a.out < asgn5_19CS10048_19CS30014_test3.c > asgn5_19CS10048_19CS30014_quads3.out
+	@echo "\nTest File 3 Successfully Translated !\n\n"
 	./a.out < asgn5_19CS10048_19CS30014_test4.c > asgn5_19CS10048_19CS30014_quads4.out
+	@echo "\nTest File 4 Successfully Translated !\n\n"
 	./a.out < asgn5_19CS10048_19CS30014_test5.c > asgn5_19CS10048_19CS30014_quads5.out
+	@echo "\nTest File 5 Successfully Translated !\n\n"
+	
 
 a.out: lex.yy.o y.tab.o asgn5_19CS10048_19CS30014_translator.o
 	g++ lex.yy.o y.tab.o asgn5_19CS10048_19CS30014_translator.o -lfl
