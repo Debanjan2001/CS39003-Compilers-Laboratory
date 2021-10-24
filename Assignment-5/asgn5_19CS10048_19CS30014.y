@@ -1016,9 +1016,13 @@ enumerator_list:
 
 enumerator: 
             ENUMERATION_CONSTANT
-            {printf("| Rule: enumerator => ENUMERATION_CONSTANT |\n");}
+            {
+                ;//printf("| Rule: enumerator => ENUMERATION_CONSTANT |\n");
+            }
             | ENUMERATION_CONSTANT ASSIGN constant_expression
-            {printf("| Rule: enumerator => ENUMERATION_CONSTANT = constant_expression |\n");}
+            {
+                ;//printf("| Rule: enumerator => ENUMERATION_CONSTANT = constant_expression |\n");
+            }
             ;
 
 type_qualifier: 
@@ -1069,9 +1073,13 @@ direct_declarator:
                     {
                         $$ = $2;
                     }
-                    | direct_declarator '['  type_qualifier_list assignment_expression_opt ']'
+                    | direct_declarator '['  type_qualifier_list assignment_expression ']'
                     {
                         ;//printf("| Rule: direct_declarator =>  direct_declarator [  type_qualifier_list_opt assignment_expression_opt ] |\n");
+                    }
+                    | direct_declarator '['  type_qualifier_list ']'
+                    {
+                        ;
                     }
                     | direct_declarator '[' assignment_expression ']'
                     {
@@ -1114,11 +1122,11 @@ direct_declarator:
                     {
                         ;//printf("| Rule: direct_declarator =>  direct_declarator [ static type_qualifier_list_opt assignment_expression ] |\n");
                     }
-                    | direct_declarator '[' type_qualifier_list STATIC assignment_expression ']'
+                    | direct_declarator '[' type_qualifier_list MUL ']'
                     {
-                        ;//printf("| Rule: direct_declarator =>  direct_declarator [ type_qualifier_list static assignment_expression ] |\n");
+                        ;//printf("| Rule: direct_declarator =>  direct_declarator [ type_qualifier_list_opt * ] |\n");
                     }
-                    | direct_declarator '[' type_qualifier_list_opt MUL ']'
+                    | direct_declarator '[' MUL ']'
                     {
                         ;//printf("| Rule: direct_declarator =>  direct_declarator [ type_qualifier_list_opt * ] |\n");
                     }
@@ -1162,22 +1170,6 @@ pointer:
             $$ = new symboltype("ptr", $3);
         }
         ;
-
-pointer_opt: 
-            pointer
-            | %empty /* epsilon */
-            ;
-
-assignment_expression_opt: 
-	                        assignment_expression
-	                        | %empty /* epsilon */
-	                        ;
-
-identifier_list_opt: 
-                    identifier_list
-	                | %empty /* epsilon */
-	                ;
-
 
 type_qualifier_list: 
                     type_qualifier
@@ -1451,17 +1443,6 @@ expression_statement:
                             $$ = new Expression();
                         }
                         ;
-
-expression_opt: 
-                expression
-                {
-                    ;
-                }
-                | %empty /* epsilon */
-                {
-                    ;
-                }
-                ;
 
 selection_statement: 
                     IF '(' expression N ')' M statement N %prec "then"
