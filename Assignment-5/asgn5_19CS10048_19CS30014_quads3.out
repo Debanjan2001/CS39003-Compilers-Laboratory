@@ -1,0 +1,127 @@
+
+******************* Multi Line Comment Starts at Line = 1 *******************
+| Rule: logical_OR_expression => logical_AND_expression |
+| Rule: logical_OR_expression => logical_AND_expression |
+| Rule: logical_OR_expression => logical_AND_expression |
+| Rule: logical_OR_expression => logical_AND_expression |
+| Rule: logical_OR_expression => logical_AND_expression |
+| Rule: logical_OR_expression => logical_AND_expression |
+| Rule: logical_OR_expression => logical_AND_expression |
+| Rule: logical_OR_expression => logical_AND_expression |
+| Rule: logical_OR_expression => logical_AND_expression |
+| Rule: logical_OR_expression => logical_AND_expression |
+| Rule: logical_OR_expression => logical_AND_expression |
+| Rule: logical_OR_expression => logical_AND_expression |
+| Rule: logical_OR_expression => logical_AND_expression |
+| Rule: logical_OR_expression => logical_AND_expression |
+
+--------------------------------------------------------------------------------------------------------------
+Three Address Code (TAC): 
+--------------------------------------------------------------------------------------------------------------
+
+0: memoryLessSwap: 
+1:     t0 = *a
+2:     t1 = *a
+3:     t2 = *b
+4:     t3 = t1 + t2
+5:     *a = t3
+6:     t4 = *b
+7:     t5 = *a
+8:     t6 = *b
+9:     t7 = t5 - t6
+10:     *b = t7
+11:     t8 = *a
+12:     t9 = *a
+13:     t10 = *b
+14:     t11 = t9 - t10
+15:     *a = t11
+
+16: fltMultToInt: 
+17:     t0 = a * b
+18:     t1 = float2int(t0)
+19:     result = t1
+20:     return result
+
+21: main: 
+22:     t0 = 0
+23:     num1 = t0
+24:     t1 = 55
+25:     num2 = t1
+26:     t2 = 2.5
+27:     flt = t2
+28:     param num2
+29:     t3 = 1.57
+30:     param t3
+31:     t4 = call fltMultToInt, 2
+32:     num1 = t4
+33:     t6 = &num1
+34:     param t6
+35:     t7 = &num2
+36:     param t7
+37:     t8 = call memoryLessSwap, 2
+38:     return 
+--------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------
+Table Name: Global                                                Parent Name: NULL
+--------------------------------------------------------------------------------------------------------------
+Name                                  Type                Initial Value       Size           Offset         Nested
+                                                                                                    
+memoryLessSwap                          void                -                   0              0              memoryLessSwap
+fltMultToInt                            int                 -                   4              0              fltMultToInt
+main                                    int                 -                   4              4              main
+--------------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------
+Table Name: memoryLessSwap                                        Parent Name: Global
+--------------------------------------------------------------------------------------------------------------
+Name                                  Type                Initial Value       Size           Offset         Nested
+                                                                                                    
+a                                       ptr(int)            -                   4              0              NULL
+b                                       ptr(int)            -                   4              4              NULL
+t0                                      int                                     4              8              NULL
+t1                                      int                                     4              12             NULL
+t2                                      int                                     4              16             NULL
+t3                                      int                                     4              20             NULL
+t4                                      int                                     4              24             NULL
+t5                                      int                                     4              28             NULL
+t6                                      int                                     4              32             NULL
+t7                                      int                                     4              36             NULL
+t8                                      int                                     4              40             NULL
+t9                                      int                                     4              44             NULL
+t10                                     int                                     4              48             NULL
+t11                                     int                                     4              52             NULL
+--------------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------
+Table Name: fltMultToInt                                          Parent Name: Global
+--------------------------------------------------------------------------------------------------------------
+Name                                  Type                Initial Value       Size           Offset         Nested
+                                                                                                    
+a                                       float               -                   8              0              NULL
+b                                       float               -                   8              8              NULL
+return                                  int                 -                   4              16             NULL
+result                                  int                 -                   4              20             NULL
+t0                                      float                                   8              24             NULL
+t1                                      int                                     4              32             NULL
+--------------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------
+Table Name: main                                                  Parent Name: Global
+--------------------------------------------------------------------------------------------------------------
+Name                                  Type                Initial Value       Size           Offset         Nested
+                                                                                                    
+return                                  int                 -                   4              0              NULL
+num1                                    int                 0                   4              4              NULL
+t0                                      int                 0                   4              8              NULL
+num2                                    int                 55                  4              12             NULL
+t1                                      int                 55                  4              16             NULL
+flt                                     float               2.5                 8              20             NULL
+t2                                      float               2.5                 8              28             NULL
+t3                                      float               1.57                8              36             NULL
+t4                                      int                                     4              44             NULL
+t5                                      int                                     4              48             NULL
+t6                                      ptr(int)                                4              52             NULL
+t7                                      ptr(int)                                4              56             NULL
+t8                                      void                                    0              60             NULL
+--------------------------------------------------------------------------------------------------------------
+
