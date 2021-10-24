@@ -1,4 +1,8 @@
 %{
+/**
+ * Authors : Debanjan Saha [19CS30014], Pritkumar Godhani [19CS10048]
+ * Assignment 5 : Compiler Lab : Intermediate Code Generation
+ */
     #include <bits/stdc++.h>
 
     #include "asgn5_19CS10048_19CS30014_translator.h"
@@ -680,7 +684,9 @@ logical_AND_expression:
 
 logical_OR_expression: 
                         logical_AND_expression
-                        {printf("| Rule: logical_OR_expression => logical_AND_expression |\n");}
+                        {
+                            $$ = $1;
+                        }
                         | logical_OR_expression OR M logical_AND_expression
                         {
                             convInt2Bool($1);
