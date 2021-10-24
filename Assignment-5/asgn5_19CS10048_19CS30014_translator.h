@@ -4,6 +4,7 @@
     Roll: 19CS10048 + 19CS30014
 */
 
+// include guards
 #ifndef __TRANSLATE_H
 #define __TRANSLATE_H
 
@@ -14,9 +15,7 @@ extern int yyparse();
 
 using namespace std;
 
-//--------------------------------------------------//
-//                  Class Declarations              //
-//--------------------------------------------------//
+/********************** Class Declarations ******************* */
 
 class sym;        // Class for an entry in ST
 class symboltype; // Class for the type of a symbol in ST
@@ -27,63 +26,58 @@ class label;      // Class for a single label entry in the label table
 class basicType;  // Class for the basic type data
 class Expression; // Class for the expression type data storage
 
-typedef sym s;
-typedef symboltype symtyp;
-typedef Expression *Exps;
+/********************** global variables **********************/
 
-//----------------------------------------------//
-//              global variables                //
-//----------------------------------------------//
-
-// denotes the current Symbol Table
+// Current Symbol Table
 extern symtable *ST;
-// denotes the Global Symbol Table
+// Global Symbol Table
 extern symtable *globalST;
-// denotes the Parent of the current Symbol Table
+// parent of the current Symbol Table
 extern symtable *parST;
-// denotes the latest encountered symbol
-extern s *currSymbolPtr;
-// denotes the quad Array
+// the latest encountered symbol
+extern sym *currSymbolPtr;
+// the quad Array
 extern quadArray Q;
-// denotes the Type ST
+// the Type ST
 extern basicType bt;
-// denotes count of instr
+
+// count of instr , commenting out now, may use later
 //extern long long int instr_count;
-// denotes count of nested tables
+
+// count of nested tables
 extern long long int table_count;
-// bool for printing debug output
+
+// boolean for printing debug output
 extern bool debug_on;
-// get the name of the loop
+
+// the name of the loop
 extern string loop_name;
+
 // table to store the labels
 extern vector<label> label_table;
 
-//----------------------------------------------------------------------//
-//      Definition of structure of each element of the symbol table     //
-//----------------------------------------------------------------------//
+/*********** Class Definition of each element of symbol table *************/
 class sym
 {
-    // For an entry in ST, we have
 public:
-    string name;      // denotes the name of the symbol
-    symboltype *type; // denotes the type of the symbol
-    int size;         // denotes the size of the symbol
-    int offset;       // denotes the offset of symbol in ST
+    string name;      // the name of the symbol
+    symboltype *type; // the type of the symbol
+    int size;         // the size of the symbol
+    int offset;       // the offset of symbol in ST
     symtable *nested; // points to the nested symbol table
     string val;       // initial value of the symbol if specified
 
     // constructor for symboltable entry
     sym(string, string t = "int", symboltype *ptr = NULL, int width = 0);
 
-    // Class Method to update different fields of an existing entry in symboltable.
+    // Class Method to update different fields of a symbol entry in symboltable.
     sym *update(symboltype *);
 };
 
-/*--------------------------------------------------
-*      Definition of the type of symbol            
---------------------------------------------------*/
+/*********** Class Definition of the type of symbol  *************/
+
 class symboltype
-{ // Class to store the type of the symbol
+{
 public:
     string type;         // stores the type of symbol.
     int width;           // stores the size of Array (if we encounter an Array) and it is 1 in default case
@@ -93,11 +87,10 @@ public:
     symboltype(string, symboltype *ptr = NULL, int width = 1);
 };
 
-//------------------------------------------------------//
-//          Class definition for the Symbol Table       //
-//------------------------------------------------------//
+/*********** Class Definition of the Symbol Table  *************/
+
 class symtable
-{ // class to store the symbol table
+{
 public:
     string name;      // Name of the Table
     int count;        // Count of the temporary variables
@@ -107,22 +100,21 @@ public:
     // Constructor
     symtable(string name = "NULL");
 
-    // Lookup for a symbol in ST
+    // Lookup method for a symbol in ST
     sym *lookup(string);
 
-    // Method to Print the ST
+    // Method to print the ST
     void print();
 
-    // Method to Update the ST
+    // Method to update the ST
     void update();
 };
 
-//--------------------------------------------------//
-//      Definition of the class of quad element    //
-//--------------------------------------------------//
+/*********** Class Definition of quad element  *************/
+
 class quad
 {
-    // A single quad has four components:
+    // A quad has four components:
 public:
     // Result
     string res;
@@ -146,28 +138,25 @@ public:
     quad(string, float, string op = "=", string arg2 = "");
 };
 
-//----------------------------------------------------------//
-//          Definition of the quad array type               //
-//----------------------------------------------------------//
+/*********** Class Definition of the quad array type  *************/
+
 class quadArray
 {
-    // Quad Array Class declaration
 public:
-    // An Array (vector) of quads
+    // A vector (array) of quads
     vector<quad> Array;
-    // Method to Print the quadArray
+    // Method to print the quadArray
     void print();
 };
 
-//--------------------------------------------------//
-//      Definition of the label symbol              //
-//--------------------------------------------------//
-class label // class of label symbols
+/*********** Definition of the label symbol  *************/
+
+class label
 {
 public:
-    // stores the name of the label
+    //  name of the label
     string name;
-    // stores the address the label is pointing to
+    // the address the label is pointing to
     int addr;
     // list of dangling goto statements
     list<int> nextlist;
@@ -176,21 +165,17 @@ public:
     label(string _name, int _addr = -1);
 };
 
-//----------------------------------------------------------//
-//          Definition of the basic type                    //
-//----------------------------------------------------------//
+/*********** Definition of the basic type  *************/
 class basicType
 {
-    // To denote a basic type
+    // class for  a basic type
 public:
     vector<string> type; // type name
     vector<int> size;    // size of the type
     void addType(string, int);
 };
 
-//----------------------------------------------//
-//     Definition of the expression type        //
-//----------------------------------------------//
+/***********  Definition of the expression type  *************/
 
 struct Expression
 {
@@ -198,7 +183,7 @@ struct Expression
     sym *loc;
     // to store whether the expression is of type int or bool or float or char
     string type;
-    // fruelist for boolean expressions
+    // truelist for boolean expressions
     list<int> truelist;
     // falselist for boolean expressions
     list<int> falselist;
@@ -206,14 +191,13 @@ struct Expression
     list<int> nextlist;
 };
 
-//--------------------------------------------------------------//
-//          Attributes of the array type element                //
-//--------------------------------------------------------------//
+/*********** Structure  Definition of the array type element    *************/
+
 struct Array
 {
-    // Used for type of Array: may be "ptr" or "arr" type
+    // for type of Array: may be "ptr" or "arr" type
     string atype;
-    // Location used to compute address of Array
+    // Location to compute address of Array
     sym *loc;
     // pointer to the symbol table entry
     sym *Array;
@@ -227,54 +211,44 @@ struct Statement
     list<int> nextlist;
 };
 
-//------------------------------------------------------------------//
-//          Overloaded emit function used by the parser             //
-//------------------------------------------------------------------//
+/*********** Overloaded emit function used by the parser   *************/
 void emit(string, string, string arg1 = "", string arg2 = "");
 void emit(string, string, int, string arg2 = "");
 void emit(string, string, float, string arg2 = "");
 
-/**
- * GENTEMP
- * -------
- * generates a temporary variable 
- * and insert it in the current 
- * Symbole table 
- * 
- * Parameter
- * ---------
- * symbol type * : pointer to the 
- *                 class of symbol type
- * init : initial value of the structure
- * 
- * Return
- * ------
- * Pointer to the newly created symbol 
- * table entry
+/*
+gentemp method
+-------
+it generates a temporary variable and inserts it in the current Symbole table 
+
+Parameters
+---------
+symbol type * : pointer to the  class of symbol type
+init : initial value of the structure
+
+Returns
+------
+Pointer to the newly created symbol table entry
  */
 sym *gentemp(symboltype *, string init = "");
 
-//-------------------------------------------------------------//
-//            Backpatching and related functions               //
-//-------------------------------------------------------------//
+/***********  Backpatching and related functions    *************/
 void backpatch(list<int>, int);                // backpatch the dangling instructions with the given address(parameter)
 list<int> makelist(int);                       // Make a new list contanining an integer address
 list<int> merge(list<int> &l1, list<int> &l2); // Merge two lists into a single list
 
-//----------------------------------------------------------------------//
-//          Other helper functions required for TAC generation          //
-//----------------------------------------------------------------------//
-
+/*********** Other helper functions required for TAC generation   *************/
 label *find_label(string name);
-//------------- Type checking and Type conversion functions -------------
+
+/****** Type checking and Type conversion functions *********/
 // helper function to convert integer to string
 string convInt2String(int);
 // helper function to convert float to string
 string convFloat2String(float);
 // helper function to convert int expression to boolean
-Expression* convInt2Bool(Expression*);
+Expression *convInt2Bool(Expression *);
 // helper function to convert boolean expression to int
-Expression* convBool2Int(Expression*);
+Expression *convBool2Int(Expression *);
 
 // helper function for type conversion
 sym *convertType(sym *, string);
@@ -292,9 +266,7 @@ int nextinstr();
 // Returns the next instruction number
 //void update_nextinstr();
 
-//----------------------------------------------------------------------//
-//           Other helper function for debugging and printing           //
-//----------------------------------------------------------------------//
+/****** Helper function for debugging and printing  *********/
 string printType(symboltype *); // print type of symbol
 
 void generateSpaces(int);
@@ -303,3 +275,4 @@ void generateSpaces(int);
 //void debug();
 
 #endif
+// end include guards
