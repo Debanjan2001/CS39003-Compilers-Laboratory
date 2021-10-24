@@ -680,7 +680,9 @@ logical_AND_expression:
 
 logical_OR_expression: 
                         logical_AND_expression
-                        {printf("| Rule: logical_OR_expression => logical_AND_expression |\n");}
+                        {
+                            $$ = $1;
+                        }
                         | logical_OR_expression OR M logical_AND_expression
                         {
                             convInt2Bool($1);

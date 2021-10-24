@@ -1,5 +1,7 @@
 test: a.out
 	./a.out < asgn5_19CS10048_19CS30014_test1.c > asgn5_19CS10048_19CS30014_quads1.out
+	./a.out < asgn5_19CS10048_19CS30014_test4.c > asgn5_19CS10048_19CS30014_quads4.out
+	./a.out < asgn5_19CS10048_19CS30014_test5.c > asgn5_19CS10048_19CS30014_quads5.out
 
 a.out: lex.yy.o y.tab.o asgn5_19CS10048_19CS30014_translator.o
 	g++ lex.yy.o y.tab.o asgn5_19CS10048_19CS30014_translator.o -lfl
@@ -33,4 +35,8 @@ clean:
 	   y.output\
 	   asgn5_19CS10048_19CS30014_translator.o\
 	   asgn5_19CS10048_19CS30014_translator.h.gch\
-	   asgn5_19CS10048_19CS30014_quads1.out
+	   asgn5_19CS10048_19CS30014_quads1.out\
+	   asgn5_19CS10048_19CS30014_quads2.out\
+	   asgn5_19CS10048_19CS30014_quads3.out\
+	   asgn5_19CS10048_19CS30014_quads4.out\
+	   asgn5_19CS10048_19CS30014_quads5.out
