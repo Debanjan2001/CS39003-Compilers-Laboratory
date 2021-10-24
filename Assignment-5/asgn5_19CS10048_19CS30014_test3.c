@@ -23,9 +23,9 @@ int fltMultToInt(float a, float b)
 int main()
 {
     int num1 = 0, num2 = 55;
-    float flt = 2.5;
+    float flt = 1.57;
 
-    num1 = fltMultToInt(num2, 1.57);
+    num1 = fltMultToInt(num2, flt);
     memoryLessSwap(&num1, &num2);
     return;
 }
