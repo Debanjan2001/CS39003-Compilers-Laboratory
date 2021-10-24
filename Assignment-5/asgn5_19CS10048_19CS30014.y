@@ -1122,7 +1122,11 @@ direct_declarator:
                     {
                         ;//printf("| Rule: direct_declarator =>  direct_declarator [ static type_qualifier_list_opt assignment_expression ] |\n");
                     }
-                    | direct_declarator '[' type_qualifier_list_opt MUL ']'
+                    | direct_declarator '[' type_qualifier_list MUL ']'
+                    {
+                        ;//printf("| Rule: direct_declarator =>  direct_declarator [ type_qualifier_list_opt * ] |\n");
+                    }
+                    | direct_declarator '[' MUL ']'
                     {
                         ;//printf("| Rule: direct_declarator =>  direct_declarator [ type_qualifier_list_opt * ] |\n");
                     }
