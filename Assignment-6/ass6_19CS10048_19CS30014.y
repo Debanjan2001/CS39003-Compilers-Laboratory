@@ -10,7 +10,6 @@
     extern int yylex();
     void yyerror(const char* s);
     extern string var_type;
-    extern vector<label> label_table;
     vector<string> allstr;
     using namespace std;
 
@@ -50,7 +49,6 @@
 %type <u_op> unary_operator
 
 %type <param_num> argument_expression_list 
-                  argument_expression_list_opt
 
 %type <exprss> 
                expression 
@@ -72,20 +70,18 @@
 %type <stmt> 
              iteration_statement
              labeled_statement
-             loop_statement
              selection_statement
              jump_statement
              block_item
              block_item_list
-             block_item_list_opt
              compound_statement
              statement
 
 %type <type_sym> pointer
 
-%type <smb> initializer
-
-%type <smb> declarator 
+%type <smb> constant
+            initializer
+            declarator 
             init_declarator 
             direct_declarator
 
@@ -105,37 +101,6 @@ M:  %empty
     }
     ;
 
-F:  %empty
-    {
-        loop_name = "FOR";
-    }
-    ;
-
-W:  %empty
-    {
-        loop_name = "WHILE";
-    }
-    ;
-
-D:  %empty
-    {
-        loop_name = "DO_WHILE";
-    }
-    ;
-
-X:  %empty
-    {
-        string name = ST->name+"."+loop_name+"$"+to_string(table_count);
-        table_count++;
-        sym* s_table = ST->lookup(name);
-        s_table->nested = new symtable(name);
-        s_table->nested->parent = ST;
-        s_table->name = name;
-        s_table->type = new symboltype("block");
-        currSymbolPtr = s_table;
-    }
-    ;
-
 N:  %empty
     {
         $$ = new Statement();
@@ -147,11 +112,11 @@ N:  %empty
 changetable:    %empty
                 {
                     //parST = ST;
-                    if(currSymbolPtr->nested == NULL) {
+                    if(currentSymbol->nested == NULL) {
                         changeTable(new symtable(""));
                     } else {
-                        changeTable(currSymbolPtr->nested);
-                        emit("FUNC", ST->name);
+                        changeTable(currentSymbol->nested);
+                        emit("FUNC", table->name);
                     }
                 }
                 ;
@@ -195,7 +160,7 @@ constant:
                 string temp = sstr.str();
                 char* intStr = (char*) temp.c_str();
                 string str = string(intStr);
-                $$->loc = gentemp(new symboltype("INTEGER"), str);
+                $$ = gentemp(new symboltype("INTEGER"), str);
                 emit("EQUAL", $$->name, $1);
             }
             | FLOATING_CONSTANT 
@@ -206,7 +171,7 @@ constant:
             | CHARACTER_CONSTANT
             {
                 $$ = gentemp(new symboltype("CHAR"), $1);
-                emit("EQUALCHAR", $$->loc->name, string($1));
+                emit("EQUALCHAR", $$->name, string($1));
             }
             | ENUMERATION_CONSTANT 
             {
@@ -340,7 +305,7 @@ unary_expression:
                                 break;
                             
                             case '*':
-                                $$->atype = "PTR";
+                                $$->cat = "PTR";
                                 $$->loc = gentemp($2->Array->type->ptr);
                                 $$->Array = $2->Array;
                                 emit("PTRR", $$->loc->name, $2->Array->name);
@@ -1107,7 +1072,7 @@ direct_declarator:
                     IDENTIFIER
                     {
                         $$ = $1->update(new symboltype(var_type));
-                        currSymbolPtr = $$;
+                        currentSymbol = $$;
                     }
                     | '(' declarator ')'
                     {
@@ -1127,7 +1092,7 @@ direct_declarator:
                         symboltype *prev = NULL;
                         while(t->type == "arr") {
                             prev = t;
-                            t = t->arrtype;
+                            t = t->ptr;
                         }
 
                         if(prev == NULL) {
@@ -1136,7 +1101,7 @@ direct_declarator:
                             $$ = $1->update(s);
                         }
                         else {
-                            prev->ptr = new symboltype("ARR", t, atoi($3->loc->val.c_str()));
+                            prev->ptr = new symboltype("ARR", t, atoi($3->loc->initial_value.c_str()));
                             $$ = $1->update($1->type);
                         }
                     }
@@ -1154,7 +1119,7 @@ direct_declarator:
                             $$ = $1->update(s);
                         }
                         else {
-                            prev->arrtype = new symboltype("ARR", t, 0);
+                            prev->ptr = new symboltype("ARR", t, 0);
                             $$ = $1->update($1->type);
                         }
                     }
@@ -1172,16 +1137,16 @@ direct_declarator:
                     }
                     | direct_declarator '(' changetable parameter_type_list ')'
                     {
-                        ST->name = $1->name;
+                        table->name = $1->name;
                         if($1->type->type != "VOID") {
-                            sym* s = ST->lookup("return");
+                            sym* s = table->lookup("return");
                             s->update($1->type);
                         }
-                        $1->nested = ST;
+                        $1->nested = table;
                         $1->category = "function";
-                        ST->parent = globalST;
-                        changeTable(globalST);
-                        currSymbolPtr = $$;
+                        table->parent = globalTable;
+                        changeTable(globalTable);
+                        currentSymbol = $$;
                     }
                     | direct_declarator '(' identifier_list ')'
                     {
@@ -1189,15 +1154,15 @@ direct_declarator:
                     }
                     | direct_declarator '(' changetable ')'
                     {
-                        ST->name = $1->name;
+                        table->name = $1->name;
                         if($1->type->type != "VOID") {
-                            sym* s = ST->lookup("return");
+                            sym* s = table->lookup("return");
                             s->update($1->type);
                         }
-                        $1->nested = ST;
-                        ST->parent = globalST;
-                        changeTable(globalST);
-                        currSymbolPtr = $$;
+                        $1->nested = table;
+                        table->parent = globalTable;
+                        changeTable(globalTable);
+                        currentSymbol = $$;
                     }
                     ;
 
@@ -1466,17 +1431,6 @@ block_item_list:
                 }
                 ;
 
-block_item_list_opt: 
-                    block_item_list
-                    {
-                        $$ = $1;
-                    }
-                    | %empty /* epsilon */
-                    {
-                        $$ = new Statement();
-                    }
-                    ;
-
 block_item: 
             declaration
             {
@@ -1563,14 +1517,18 @@ iteration_statement:
                         emit("GOTOOP", str);
                         $$->nextlist = $5->falselist;
                     }
-                    | FOR F '(' expression_statement M expression_statement M expression N ')' M loop_statement
+                    | FOR '(' expression_statement M expression_statement M expression N ')' M statement
                     {
                         $$ = new Statement();
                         convInt2Bool($5);
                         backpatch($5->truelist, $10);
                         backpatch($8->nextlist, $4);
                         backpatch($11->nextlist, $6);
-                        string str = convInt2String($6);
+                        stringstream sstr;
+                        sstr << $6;
+                        string temp = sstr.str();
+                        char* intStr = (char*) temp.c_str();
+                        string str = string(intStr);
                         emit("GOTOOP", str);
                         $$->nextlist = $5->falselist;
                     }
@@ -1643,11 +1601,11 @@ function_definition:
                     {
 
                     }
-                    | declaration_specifiers declarator CT compound_statement
+                    | declaration_specifiers declarator changetable compound_statement
                     {
-                        emit("FUNCEND", ST->name);
-                        ST->parent = globalST;
-                        changeTable(globalST);
+                        emit("FUNCEND", table->name);
+                        table->parent = globalTable;
+                        changeTable(globalTable);
                     }
                     ;
 

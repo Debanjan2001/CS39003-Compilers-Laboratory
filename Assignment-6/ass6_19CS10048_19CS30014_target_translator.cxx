@@ -18,18 +18,18 @@ void computeActivationRecord(symtable *ST)
     int param = -20;
     int local = -24;
 
-    for (list<sym>::iterator it = ST->table.begin(); it != ST->table.end(); it++)
+    for (list<sym>::iterator it = globalTable->table.begin(); it != globalTable->table.end(); it++)
     {
         if (it->category == "param")
         {
-            ST->ar[it->name] = param;
+            globalTable->ar[it->name] = param;
             param += it->size;
         }
         else if (it->name == "return")
             continue;
         else
         {
-            ST->ar[it->name] = local;
+            globalTable->ar[it->name] = local;
             local += it->size;
         }
     }
@@ -66,7 +66,7 @@ void genAssembly()
 
     for (list<symtable *>::iterator it = tablelist.begin(); it != tablelist.end(); it++)
     {
-        computeActivationRecord(*iterator);
+        computeActivationRecord(*it);
     }
 
     ofstream assmFile;
@@ -139,7 +139,7 @@ void genAssembly()
         string arg2 = it->arg2;
         string s = arg2;
 
-        if (op == 'PARAM')
+        if (op == "PARAM")
         {
             params.push_back(result);
         }

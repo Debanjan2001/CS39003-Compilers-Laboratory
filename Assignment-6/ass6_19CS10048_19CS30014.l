@@ -85,7 +85,7 @@ PUNCTUATOR              "["|"]"|"("|")"|"{"|"}"|"."|"->"|"++"|"--"|"&"|"*"|"+"|"
 "return"        { return RETURN; }
 
 {IDENTIFIER}				{
-                                yylval.smb = ST->lookup(yytext);
+                                yylval.smb = table->lookup(yytext);
                                 return IDENTIFIER; 
                             }
 {STRING_LITERAL} 			{ 
