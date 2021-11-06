@@ -1,8 +1,8 @@
 %{
 	#include <stdio.h>
     #include <string.h>
-    #include "asgn5_19CS10048_19CS30014_translator.h"
-	#include "y.tab.h"
+    #include "ass6_19CS10048_19CS30014_translator.h"
+	#include "ass6_19CS10048_19CS30014.tab.h"
 	extern void yyerror(const char *);
     extern YYSTYPE yylval;
     extern int lineNum;

@@ -5,7 +5,7 @@
  */
     #include <bits/stdc++.h>
 
-    #include "asgn5_19CS10048_19CS30014_translator.h"
+    #include "ass6_19CS10048_19CS30014_translator.h"
 
     extern int yylex();
     void yyerror(const char* s);
@@ -13,7 +13,9 @@
     extern vector<label> label_table;
     vector<string> allstr;
     using namespace std;
+
 %}
+
 
 %union {
     int intval;
@@ -1230,7 +1232,6 @@ type_qualifier_list:
                     ;
 
 
-/*
 type_qualifier_list_opt: 
                         type_qualifier_list
                         {
@@ -1241,7 +1242,6 @@ type_qualifier_list_opt:
                             ;
                         }
                         ;
-*/
 
 
 parameter_type_list: 
@@ -1466,7 +1466,6 @@ block_item_list:
                 }
                 ;
 
-/*
 block_item_list_opt: 
                     block_item_list
                     {
@@ -1477,7 +1476,6 @@ block_item_list_opt:
                         $$ = new Statement();
                     }
                     ;
-*/
 
 block_item: 
             declaration
