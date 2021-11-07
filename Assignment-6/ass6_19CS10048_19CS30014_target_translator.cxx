@@ -368,7 +368,8 @@ void genAssembly()
             {
                 if (result != "")
                     assmFile << "movl\t" << table->ar[result] << "(%rbp), %eax" << endl;
-                assmFile << "nop";
+                else
+                    assmFile << "nop";
             }
             else if (op == "PARAM")
             {
@@ -377,7 +378,7 @@ void genAssembly()
             else if (op == "CALL")
             {
                 symtable *t = globalTable->lookup(arg1)->nested;
-                int i = 0, j = 0;
+                int i, j = 0;
                 for (list<sym>::iterator it = t->table.begin(); it != t->table.end(); it++)
                 {
                     i = distance(t->table.begin(), it);
@@ -460,6 +461,8 @@ void genAssembly()
                         case 3:
                             assmFile << "\n\tmovq\t%rcx, " << table->ar[it->name] << "(%rbp)";
                             i++;
+                            break;
+                        default:
                             break;
                         }
                     }

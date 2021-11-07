@@ -1234,7 +1234,7 @@ parameter_list:
 parameter_declaration: 
                         declaration_specifiers declarator
                         {
-                            $2->category = "PARAM";//printf("| Rule: parameter_declaration => declaration_specifiers declarator |\n");
+                            $2->category = "param";//printf("| Rule: parameter_declaration => declaration_specifiers declarator |\n");
                         }
                         | declaration_specifiers
                         {
