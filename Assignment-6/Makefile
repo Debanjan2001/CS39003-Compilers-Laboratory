@@ -1,4 +1,4 @@
-assembly: tinyC libass2_19CS30014.a
+assembly: tinyC libass2_19CS10048.a
 	
 	@echo "\n------------------- Generating Quads for the test files ---------------\n"
 
@@ -18,15 +18,15 @@ assembly: tinyC libass2_19CS30014.a
 
 	@echo "\n-------------    Compiling the test files   ---------------\n"
 
-	gcc ass6_19CS10048_19CS30014_1.o -o test1 -L. -lass2_19CS30014 -no-pie
-	gcc ass6_19CS10048_19CS30014_2.o -o test2 -L. -lass2_19CS30014 -no-pie
-	gcc ass6_19CS10048_19CS30014_3.o -o test3 -L. -lass2_19CS30014 -no-pie
-	gcc ass6_19CS10048_19CS30014_4.o -o test4 -L. -lass2_19CS30014 -no-pie
-	gcc ass6_19CS10048_19CS30014_5.o -o test5 -L. -lass2_19CS30014 -no-pie
+	gcc ass6_19CS10048_19CS30014_1.o -o test1 -L. -lass2_19CS10048 -no-pie
+	gcc ass6_19CS10048_19CS30014_2.o -o test2 -L. -lass2_19CS10048 -no-pie
+	gcc ass6_19CS10048_19CS30014_3.o -o test3 -L. -lass2_19CS10048 -no-pie
+	gcc ass6_19CS10048_19CS30014_4.o -o test4 -L. -lass2_19CS10048 -no-pie
+	gcc ass6_19CS10048_19CS30014_5.o -o test5 -L. -lass2_19CS10048 -no-pie
 
-libass2_19CS30014.a:
-	gcc -c ass2_19CS30014.c
-	ar -rcs libass2_19CS30014.a ass2_19CS30014.o
+libass2_19CS10048.a:
+	gcc -c ass2_19CS10048.c
+	ar -rcs libass2_19CS10048.a ass2_19CS10048.o
 
 tinyC: lex.yy.o ass6_19CS10048_19CS30014.tab.o ass6_19CS10048_19CS30014_translator.o ass6_19CS10048_19CS30014_target_translator.o
 	g++ lex.yy.o ass6_19CS10048_19CS30014.tab.o ass6_19CS10048_19CS30014_translator.o \
@@ -80,8 +80,8 @@ clean:
 	   ass6_19CS10048_19CS30014_quads3.out\
 	   ass6_19CS10048_19CS30014_quads4.out\
 	   ass6_19CS10048_19CS30014_quads5.out\
-	   libass2_19CS30014.a\
-	   ass2_19CS30014.o\
+	   libass2_19CS10048.a\
+	   ass2_19CS10048.o\
 	   ass6_19CS10048_19CS30014_1.o\
 	   ass6_19CS10048_19CS30014_2.o\
 	   ass6_19CS10048_19CS30014_3.o\

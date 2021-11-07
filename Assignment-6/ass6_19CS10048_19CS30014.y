@@ -1565,12 +1565,12 @@ jump_statement:
                 | RETURN expression SEMICOLON
                 {
                     $$ = new Statement();
-                    emit("return", $2->loc->name);
+                    emit("RETURN", $2->loc->name);
                 }
                 | RETURN SEMICOLON 
                 {
                     $$ = new Statement();
-                    emit("return", "");
+                    emit("RETURN", "");
                 }
                 ;
 
