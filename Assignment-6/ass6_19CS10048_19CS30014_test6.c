@@ -6,7 +6,7 @@ Authors  : Pritkumar Godhani (19CS10048)
 Assignment 6 Testfile:
 ----------------------
 Test to check whether we have successfully written and integrated several parts of a compiler or not
-Test 5/6: Testing Algorithmic Problem Solving
+Test 6/6: Testing Algorithmic Problem Solving
 ------------------------------------------*/
 
 int printInt(int num);
@@ -37,7 +37,7 @@ int main()
     printStr("?\nIf this was your number Press 1\nIf your number is less than this guess Press 0\nIf your number is greater than this guess Press 2\n");
     printStr(">> YOUR CHOICE: ");
     int ans;
-    ans = readInt(&ep);
+    ans = readInt(&eP);
 
     if (ans == 1)
     {

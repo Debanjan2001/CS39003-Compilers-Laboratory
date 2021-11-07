@@ -18,7 +18,7 @@ int fact(int n)
   int ans = 1;
   if (n < 2)
   {
-    ans = n;
+    ans = 1;
   }
   else
   {

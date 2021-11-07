@@ -3,7 +3,7 @@ CS39003 Compilers Laboratory
 Autumn 2021-2022
 Authors  : Pritkumar Godhani (19CS10048)
            Debanjan Saha     (19CS30014) 
-Assignment 6 : Translator
+Assignment 6 : Translator header file
 ------------------------------------------*/
 
 // include guards
@@ -24,25 +24,33 @@ extern int yyparse();
 
 // Class Declarations
 
-class sym;       // class for storing Entry in a symbol table
-class quad;      // class for storing Entry in quad Array
-class symtype;   // class for storing Type of a symbol in symbol table
-class symtable;  // class for storing Symbol Table
-class quadArray; // class for storing QuadArray
+// class for an Entry in a symbol table
+class sym;
+// class for an Entry in quad Array
+class quad;
+// class for storing type of a symbol in symbol table
+class symboltype;
+// class for storing Symbol Table
+class symtable;
+// class for  QuadArray
+class quadArray;
 
-extern quadArray q;           // Array of Quads
-extern symtable *table;       // Current Symbbol Table
-extern sym *currentSymbol;    // Pointer to just encountered symbol
-extern symtable *globalTable; // Global Symbbol Table
+extern quadArray q;           // Quad Array
+extern symtable *table;       // Current ST
+extern sym *currentSymbol;    // Pointer to last seen symbol
+extern symtable *globalTable; // Global Symbol Table
 
 //  Definition of the type of symbol
-class symtype
-{ // Type of symbols in symbol table
+class symboltype
+{
+    // Type of symbols in symbol table
 public:
-    symtype(string type, symtype *ptr = NULL, int width = 1);
+    symboltype(string type, symboltype *ptr = NULL, int width = 1);
     string type;
-    int width;    // Size of Array (in case of Arrays)
-    symtype *ptr; // for 2d Arrays and pointers
+    // Size(width) of array
+    int width;
+    // for 2d rrays and pointers
+    symboltype *ptr;
 };
 
 //      Definition of the struct of quad element
@@ -56,10 +64,10 @@ public:
     string arg1;   // Argument 1
     string arg2;   // Argument 2
 
-    void print();                                                            // Print Quad
-    quad(string result, string arg1, string op = "EQUAL", string arg2 = ""); //constructors
-    quad(string result, int arg1, string op = "EQUAL", string arg2 = "");    //constructors
-    quad(string result, float arg1, string op = "EQUAL", string arg2 = "");  //constructors
+    void print();                                                         // Print Quad
+    quad(string result, string arg1, string op = "EQ", string arg2 = ""); //constructors
+    quad(string result, int arg1, string op = "EQ", string arg2 = "");    //constructors
+    quad(string result, float arg1, string op = "EQ", string arg2 = "");  //constructors
 };
 
 //          Definition of the quad array type
@@ -68,26 +76,28 @@ class quadArray
 {
     // Array of quads
 public:
-    vector<quad> Array; // Vector of quads
-    void print();       // Print the quadArray
+    // Vector of quads
+    vector<quad> Array;
+    // Print the quadArray
+    void print();
 };
 
-//      Defination of structure of each element of the symbol table
+//      Definition of structure of each element of the symbol table
 
 class sym
 {
-    // Symbols class
+
 public:
     string name;          // Name of the symbol
-    symtype *type;        // Type of the Symbol
+    symboltype *type;     // Type of the Symbol
     string initial_value; // Symbol initial valus (if any)
-    string category;      // global, local or param
+    string category;      // global, local or param category
     int size;             // Size of the symbol
     int offset;           // Offset of symbol
     symtable *nested;     // Pointer to nested symbol table
 
-    sym(string name, string t = "INTEGER", symtype *ptr = NULL, int width = 0); // constructor declaration
-    sym *update(symtype *t);                                                    // A method to update different fields of an existing entry.
+    sym(string name, string t = "INTEGER", symboltype *ptr = NULL, int width = 0); // constructor declaration
+    sym *update(symboltype *t);                                                    // A method to update different fields of an existing entry.
     sym *link_to_symbolTable(symtable *t);
 };
 
@@ -109,7 +119,7 @@ public:
 
 //          Class defination for the Statements
 
-struct statement
+struct Statement
 {
     list<int> nextlist; // Nextlist for statement
 };
@@ -119,25 +129,29 @@ struct statement
 struct Array
 {
     string cat;
-    sym *loc;      // Temporary used for computing Array address
-    sym *Array;    // Pointer to symbol table
-    symtype *type; // type of the subArray generated
+    sym *loc;         // Temporary used for computing Array address
+    sym *Array;       // Pointer to symbol table
+    symboltype *type; // type of the subArray generated
 };
 
 //     Defination of the expression type
 
-struct expr
+struct Expression
 {
-    string type; // to store whether the expression is of type int or bool
+    // type int or bool
+    string type;
 
-    // -------- Valid for non-bool type ----------
-    sym *loc; // Pointer to the symbol table entry
+    // Valid for non-bool type
+    // Pointer to the symbol table entry
+    sym *loc;
 
-    // ------------- Valid for bool type ----------
-    list<int> truelist;  // Truelist valid for boolean
-    list<int> falselist; // Falselist valid for boolean expressions
+    // Valid for bool type
+    // Truelist valid for boolean
+    list<int> truelist;
+    // Falselist valid for boolean expressions
+    list<int> falselist;
 
-    //------- Valid for statement expression ------
+    // for statement expression
     list<int> nextlist;
 };
 
@@ -155,44 +169,35 @@ Returns
 ------
 Pointer to the newly created symbol table entry
  */
-sym *gentemp(symtype *t, string init = "");
+sym *gentemp(symboltype *t, string init = "");
 
-//          Overloaded emit function used by the parser
-
-//----------------Global functions required for the translator----------------
+// Overloaded emit function used by the parser
 
 void emit(string op, string result, string arg1 = "", string arg2 = ""); // emits for adding quads to quadArray
 void emit(string op, string result, int arg1, string arg2 = "");         // emits for adding quads to quadArray (arg1 is int)
 void emit(string op, string result, float arg1, string arg2 = "");       // emits for adding quads to quadArray (arg1 is float)
 
-//            Backpatching and related functions
+//Backpatching and other functions
 
 void backpatch(list<int> lst, int i);
 
-list<int> makelist(int i); // Make a new list contaninig an integer
+list<int> makelist(int i);
 
-list<int> merge(list<int> &lst1, list<int> &lst2); // Merge two lists into a single list
+list<int> merge(list<int> &a, list<int> &b);
 
-//          Other helper functions required for TAC generation
+// Helper functions required for TAC generation
 
-sym *conv(sym *, string);                 // TAC for Type conversion in program
-bool typecheck(sym *&s1, sym *&s2);       // Checks if two symbols have same type
-bool typecheck(symtype *t1, symtype *t2); // checks if two symtype objects have same type
+sym *conv(sym *, string);
+bool isSameTypeCheck(sym *&s1, sym *&s2);             // Checks if two symbols have same type
+bool isSameTypeCheck(symboltype *t1, symboltype *t2); // checks if two symboltype objects have same type
 
-expr *convInt2Bool(expr *); // convert any expression (int) to bool
-expr *convBool2Int(expr *); // convert bool to expression (int)
+Expression *convInt2Bool(Expression *); // convert (int) to bool
+Expression *convBool2Int(Expression *); // convert bool to (int)
 
 void changeTable(symtable *newtable); //for changing the current sybol table
-int nextinstr();                      // Returns the next instruction number
+int nextinstr();                      //  the next instruction number
 
-//           Other helper function for debugging and printing
-
-int size_type(symtype *);     // Calculate size of any symbol type
-string print_type(symtype *); // For printing type of symbol recursive printing of type
-
-// TBD
-typedef symtype symboltype;
-typedef expr Expression;
-typedef statement Statement;
+int calculate_size(symboltype *); // Calculate size of any symbol type
+string print_type(symboltype *);  // For printing type of symbol recursive printing of type
 
 #endif

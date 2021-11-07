@@ -198,7 +198,7 @@ postfix_expression:
                         if($1->cat == "ARR") {
                             sym* s = gentemp(new symboltype("INTEGER"));
                             stringstream sstr;
-                            sstr<<size_type($$->type);
+                            sstr<<calculate_size($$->type);
                             string tempstr = sstr.str();
                             char* intStr = (char*) tempstr.c_str();
                             emit("MULT", s->name, $3->loc->name, string(intStr));
@@ -206,7 +206,7 @@ postfix_expression:
                         }
                         else {
                             stringstream sstr;
-                            sstr<<size_type($$->type);
+                            sstr<<calculate_size($$->type);
                             string tempstr = sstr.str();
                             char* intStr = (char*) tempstr.c_str();
                             emit("MULT", $$->loc->name, $3->loc->name, string(intStr));
@@ -399,7 +399,7 @@ multiplicative_expression:
                             }
                             | multiplicative_expression MUL cast_expression
                             {
-                                if(!typecheck($3->Array, $1->loc)) {
+                                if(!isSameTypeCheck($3->Array, $1->loc)) {
                                     yyerror("TYPE MISMATCH");
                                 }
                                 else {
@@ -410,7 +410,7 @@ multiplicative_expression:
                             }
                             | multiplicative_expression DIV cast_expression
                             {
-                                if(!typecheck($3->Array, $1->loc)) {
+                                if(!isSameTypeCheck($3->Array, $1->loc)) {
                                     yyerror("TYPE MISMATCH");
                                 }
                                 else {
@@ -421,7 +421,7 @@ multiplicative_expression:
                             }
                             | multiplicative_expression MOD cast_expression
                             {
-                                if(!typecheck($3->Array, $1->loc)) {
+                                if(!isSameTypeCheck($3->Array, $1->loc)) {
                                     yyerror("TYPE MISMATCH");
                                 }
                                 else {
@@ -439,7 +439,7 @@ additive_expression:
                         }
                         | additive_expression ADD multiplicative_expression
                         {
-                            if(!typecheck($1->loc, $3->loc)) {
+                            if(!isSameTypeCheck($1->loc, $3->loc)) {
                                 yyerror("TYPE MISMATCH");
                             }
                             else {
@@ -450,7 +450,7 @@ additive_expression:
                         }
                         | additive_expression SUB multiplicative_expression
                         {
-                            if(!typecheck($1->loc, $3->loc)) {
+                            if(!isSameTypeCheck($1->loc, $3->loc)) {
                                 yyerror("TYPE MISMATCH");
                             }
                             else {
@@ -497,7 +497,7 @@ relational_expression:
                         }
                         | relational_expression LT shift_expression
                         {
-                            if(!typecheck($1->loc, $3->loc))
+                            if(!isSameTypeCheck($1->loc, $3->loc))
                             {
                                 yyerror("TYPE MISMATCH");
                             }
@@ -512,7 +512,7 @@ relational_expression:
                         }
                         | relational_expression GT shift_expression
                         {
-                            if(!typecheck($1->loc, $3->loc))
+                            if(!isSameTypeCheck($1->loc, $3->loc))
                             {
                                 yyerror("TYPE MISMATCH");
                             }
@@ -527,7 +527,7 @@ relational_expression:
                         }
                         | relational_expression LTE shift_expression
                         {
-                            if(!typecheck($1->loc, $3->loc))
+                            if(!isSameTypeCheck($1->loc, $3->loc))
                             {
                                 yyerror("TYPE MISMATCH");
                             }
@@ -542,7 +542,7 @@ relational_expression:
                         }
                         | relational_expression GTE shift_expression
                         {
-                            if(!typecheck($1->loc, $3->loc))
+                            if(!isSameTypeCheck($1->loc, $3->loc))
                             {
                                 yyerror("TYPE MISMATCH");
                             }
@@ -564,7 +564,7 @@ equality_expression:
                         }
                         | equality_expression EQ relational_expression
                         {
-                            if(!typecheck($1->loc, $3->loc))
+                            if(!isSameTypeCheck($1->loc, $3->loc))
                             {
                                 yyerror("TYPE MISMATCH");
                             }
@@ -581,7 +581,7 @@ equality_expression:
                         }
                         | equality_expression NEQ relational_expression
                         {
-                            if(!typecheck($1->loc, $3->loc))
+                            if(!isSameTypeCheck($1->loc, $3->loc))
                             {
                                 yyerror("TYPE MISMATCH");
                             }
@@ -605,7 +605,7 @@ AND_expression:
                     }
                     | AND_expression BITWISE_AND equality_expression
                     {
-                        if(!typecheck($1->loc, $3->loc))
+                        if(!isSameTypeCheck($1->loc, $3->loc))
                         {
                             yyerror("TYPE MISMATCH");
                         }
@@ -627,7 +627,7 @@ exclusive_OR_expression:
                             }
                             | exclusive_OR_expression BITWISE_XOR AND_expression
                             {
-                                if(!typecheck($1->loc, $3->loc))
+                                if(!isSameTypeCheck($1->loc, $3->loc))
                                 {
                                     yyerror("TYPE MISMATCH");
                                 }
@@ -649,7 +649,7 @@ inclusive_OR_expression:
                             }
                             | inclusive_OR_expression BITWISE_OR exclusive_OR_expression
                             {
-                                if(!typecheck($1->loc, $3->loc))
+                                if(!isSameTypeCheck($1->loc, $3->loc))
                                 {
                                     yyerror("TYPE MISMATCH");
                                 }

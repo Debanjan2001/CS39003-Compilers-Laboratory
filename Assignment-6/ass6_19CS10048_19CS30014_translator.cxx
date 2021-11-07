@@ -10,36 +10,26 @@ Assignment 6 : Translator
 #include <sstream>
 using namespace std;
 
-//----------------------------------------------//
-//              global variables                //
-//          (Referance from the headers)        //
-//----------------------------------------------//
+// Quad Array
+quadArray q;
+// Stores latest type
+string Type;
+// Points to current symbol table
+symtable *table;
+// points to current symbol
+sym *currentSymbol;
+// Global Symbbol Table
+symtable *globalTable;
 
-quadArray q;           // Quad Array
-string Type;           // Stores latest type
-symtable *table;       // Points to current symbol table
-sym *currentSymbol;    // points to current symbol
-symtable *globalTable; // Global Symbbol Table
+// Implementation of the Symbol Type Class functions
 
-//-----------------------------------------------------------//
-//      Implementation of the Symbol Type Class functions    //
-//-----------------------------------------------------------//
+symboltype::symboltype(string type, symboltype *ptr, int width) : type(type),
+                                                                  ptr(ptr),
+                                                                  width(width){};
 
-symtype::symtype(string type, symtype *ptr, int width) : type(type),
-                                                         ptr(ptr),
-                                                         width(width){};
-
-//--------------------------------------------------//
-//      Implementation of the quad functions        //
-//--------------------------------------------------//
-
-//----------------Constrtuctors overloaded----------------------
-
-// --------- (string, string, string, string)
+//      Implementation of the quad class functions        //
 
 quad::quad(string result, string arg1, string op, string arg2) : result(result), arg1(arg1), arg2(arg2), op(op){}; // Constructor
-
-// --------- (string, int, string, string)
 
 quad::quad(string result, int arg1, string op, string arg2) : result(result), arg2(arg2), op(op) // Constructor
 {
@@ -51,11 +41,9 @@ quad::quad(string result, int arg1, string op, string arg2) : result(result), ar
     this->arg1 = str;                        // store the value in arg1
 }
 
-// --------- (string, float, string, string)
-
 quad::quad(string result, float arg1, string op, string arg2) : result(result), arg2(arg2), op(op)
 {
-    std::ostringstream buff; // Create an output stream buffer of string
+    ostringstream buff;      // Create an output stream buffer of string
     buff << arg1;            // convert float to string by passing it into string buffer
     this->arg1 = buff.str(); // store the value in arg1
 }
@@ -64,143 +52,117 @@ quad::quad(string result, float arg1, string op, string arg2) : result(result), 
 void quad::print()
 {
 
-    ///////////////////////////////////////
-    //         SHIFT OPERATORS           //
-    ///////////////////////////////////////
-
     if (op == "LEFTOP")
-        std::cout << result << " = " << arg1 << " << " << arg2;
+        cout << result << " = " << arg1 << " << " << arg2;
     else if (op == "RIGHTOP")
-        std::cout << result << " = " << arg1 << " >> " << arg2;
+        cout << result << " = " << arg1 << " >> " << arg2;
     else if (op == "EQUAL")
-        std::cout << result << " = " << arg1;
-
-    ///////////////////////////////////////
-    //          BINARY OPERATORS         //
-    ///////////////////////////////////////
-
+        cout << result << " = " << arg1;
     else if (op == "ADD")
-        std::cout << result << " = " << arg1 << " + " << arg2;
+        cout << result << " = " << arg1 << " + " << arg2;
     else if (op == "SUB")
-        std::cout << result << " = " << arg1 << " - " << arg2;
+        cout << result << " = " << arg1 << " - " << arg2;
     else if (op == "MULT")
-        std::cout << result << " = " << arg1 << " *" << arg2;
+        cout << result << " = " << arg1 << " *" << arg2;
     else if (op == "DIVIDE")
-        std::cout << result << " = " << arg1 << " / " << arg2;
+        cout << result << " = " << arg1 << " / " << arg2;
     else if (op == "MODOP")
-        std::cout << result << " = " << arg1 << " % " << arg2;
+        cout << result << " = " << arg1 << " % " << arg2;
     else if (op == "XOR")
-        std::cout << result << " = " << arg1 << " ^ " << arg2;
+        cout << result << " = " << arg1 << " ^ " << arg2;
     else if (op == "INOR")
-        std::cout << result << " = " << arg1 << " | " << arg2;
+        cout << result << " = " << arg1 << " | " << arg2;
     else if (op == "BAND")
-        std::cout << result << " = " << arg1 << " &" << arg2;
-    ///////////////////////////////////////
-    //         UNARY OPERATORS           //
-    ///////////////////////////////////////
-
+        cout << result << " = " << arg1 << " &" << arg2;
     else if (op == "ADDRESS")
-        std::cout << result << " = &" << arg1;
+        cout << result << " = &" << arg1;
     else if (op == "PTRR")
-        std::cout << result << " = *" << arg1;
+        cout << result << " = *" << arg1;
     else if (op == "PTRL")
-        std::cout << "*" << result << " = " << arg1;
+        cout << "*" << result << " = " << arg1;
     else if (op == "UMINUS")
-        std::cout << result << " = -" << arg1;
+        cout << result << " = -" << arg1;
     else if (op == "BNOT")
-        std::cout << result << " = ~" << arg1;
+        cout << result << " = ~" << arg1;
     else if (op == "LNOT")
-        std::cout << result << " = !" << arg1;
-
-    ///////////////////////////////////////
-    //       RELATIONAL OPERATORS        //
-    ///////////////////////////////////////
-
-    else if (op == "EQOP")
-        std::cout << "if " << arg1 << " == " << arg2 << " goto " << result;
-    else if (op == "NEOP")
-        std::cout << "if " << arg1 << " != " << arg2 << " goto " << result;
+        cout << result << " = !" << arg1;
     else if (op == "LT")
-        std::cout << "if " << arg1 << "<" << arg2 << " goto " << result;
+        cout << "if " << arg1 << "<" << arg2 << " goto " << result;
     else if (op == "GT")
-        std::cout << "if " << arg1 << " > " << arg2 << " goto " << result;
+        cout << "if " << arg1 << " > " << arg2 << " goto " << result;
     else if (op == "GE")
-        std::cout << "if " << arg1 << " >= " << arg2 << " goto " << result;
+        cout << "if " << arg1 << " >= " << arg2 << " goto " << result;
     else if (op == "LE")
-        std::cout << "if " << arg1 << " <= " << arg2 << " goto " << result;
+        cout << "if " << arg1 << " <= " << arg2 << " goto " << result;
+    else if (op == "EQOP")
+        cout << "if " << arg1 << " == " << arg2 << " goto " << result;
+    else if (op == "NEOP")
+        cout << "if " << arg1 << " != " << arg2 << " goto " << result;
     else if (op == "GOTOOP")
-        std::cout << "goto " << result;
-
-    ///////////////////////////////////////
-    //         OTHER OPERATORS           //
-    ///////////////////////////////////////
-
+        cout << "goto " << result;
     else if (op == "ARRR")
-        std::cout << result << " = " << arg1 << "[" << arg2 << "]";
+        cout << result << " = " << arg1 << "[" << arg2 << "]";
     else if (op == "ARRL")
-        std::cout << result << "[" << arg1 << "]"
-                  << " = " << arg2;
+        cout << result << "[" << arg1 << "]"
+             << " = " << arg2;
     else if (op == "RETURN")
-        std::cout << "ret " << result;
+        cout << "ret " << result;
     else if (op == "PARAM")
-        std::cout << "param " << result;
+        cout << "param " << result;
     else if (op == "CALL")
-        std::cout << result << " = "
-                  << "call " << arg1 << ", " << arg2;
+        cout << result << " = "
+             << "call " << arg1 << ", " << arg2;
     else if (op == "FUNC")
-        std::cout << result << ": ";
+        cout << result << ": ";
     else if (op == "FUNCEND")
-        std::cout << "";
+        cout << "";
     else
-        std::cout << "op";
-    std::cout << endl;
+        cout << "op";
+    cout << endl;
 }
 
-//--------------------------------------------------------------//
-//        Implementation of the Quad Array Class functions      //
-//--------------------------------------------------------------//
+// Implementation of the Quad Array Class functions
 
-//------------------Print the elements of the Quad Array--------------------
 void quadArray::print()
 {
-    std::cout << setw(30) << setfill('=') << "=" << endl;
-    std::cout << "Quad Translation" << endl;
-    std::cout << setw(30) << setfill('-') << "-" << setfill(' ') << endl;
+    cout << setw(32) << setfill('=') << "=" << endl;
+    cout << "Quad Translation" << endl;
+    cout << setw(32) << setfill('-') << "-" << setfill(' ') << endl;
     for (vector<quad>::iterator it = Array.begin(); it != Array.end(); it++)
     {
         if (it->op == "FUNC")
         {
-            std::cout << "\n";
+            cout << "\n";
             it->print();
-            std::cout << "\n";
+            cout << "\n";
         }
         else if (it->op == "FUNCEND")
         {
         }
         else
         {
-            std::cout << "\t" << setw(4) << it - Array.begin() << ":\t";
+            cout << "\t" << setw(4) << it - Array.begin() << ":\t";
             it->print();
         }
     }
 
-    std::cout << setw(30) << setfill('-') << "-" << endl;
+    cout << setw(30) << setfill('-') << "-" << endl;
 }
 
-sym::sym(string name, string t, symtype *ptr, int width) : name(name)
+sym::sym(string name, string t, symboltype *ptr, int width) : name(name)
 {
-    type = new symtype(t, ptr, width);
+    type = new symboltype(t, ptr, width);
     nested = NULL;
     initial_value = "";
     category = "";
     offset = 0;
-    size = size_type(type);
+    size = calculate_size(type);
 }
 
-sym *sym::update(symtype *t)
+sym *sym::update(symboltype *t)
 {
     type = t;
-    this->size = size_type(t);
+    this->size = calculate_size(t);
     return this;
 }
 
@@ -209,47 +171,47 @@ symtable::symtable(string name) : name(name), count(0) {}
 void symtable::print()
 {
     list<symtable *> tablelist;
-    std::cout << setw(120) << setfill('=') << "=" << endl;
-    std::cout << "Symbol Table: " << setfill(' ') << left << setw(50) << this->name;
-    std::cout << right << setw(25) << "Parent: ";
+    cout << setw(120) << setfill('=') << "=" << endl;
+    cout << "Symbol Table: " << setfill(' ') << left << setw(50) << this->name;
+    cout << right << setw(25) << "Parent: ";
     if (this->parent != NULL)
-        std::cout << this->parent->name;
+        cout << this->parent->name;
     else
-        std::cout << "null";
-    std::cout << endl;
-    std::cout << setw(120) << setfill('-') << "-" << endl;
-    std::cout << setfill(' ') << left << setw(15) << "Name";
-    std::cout << left << setw(25) << "Type";
-    std::cout << left << setw(15) << "Category";
-    std::cout << left << setw(30) << "Initial Value";
-    std::cout << left << setw(12) << "Size";
-    std::cout << left << setw(12) << "Offset";
-    std::cout << left << "Nested" << endl;
-    std::cout << setw(120) << setfill('-') << "-" << setfill(' ') << endl;
+        cout << "null";
+    cout << endl;
+    cout << setw(120) << setfill('-') << "-" << endl;
+    cout << setfill(' ') << left << setw(15) << "Name";
+    cout << left << setw(25) << "Type";
+    cout << left << setw(15) << "Category";
+    cout << left << setw(30) << "Initial Value";
+    cout << left << setw(12) << "Size";
+    cout << left << setw(12) << "Offset";
+    cout << left << "Nested" << endl;
+    cout << setw(120) << setfill('-') << "-" << setfill(' ') << endl;
 
     for (list<sym>::iterator it = table.begin(); it != table.end(); it++)
     {
-        std::cout << left << setw(15) << it->name;
+        cout << left << setw(15) << it->name;
         string stype = print_type(it->type);
-        std::cout << left << setw(25) << stype;
-        std::cout << left << setw(15) << it->category;
-        std::cout << left << setw(30) << it->initial_value;
-        std::cout << left << setw(12) << it->size;
-        std::cout << left << setw(12) << it->offset;
-        std::cout << left;
+        cout << left << setw(25) << stype;
+        cout << left << setw(15) << it->category;
+        cout << left << setw(30) << it->initial_value;
+        cout << left << setw(12) << it->size;
+        cout << left << setw(12) << it->offset;
+        cout << left;
         if (it->nested == NULL)
         {
-            std::cout << "null" << endl;
+            cout << "null" << endl;
         }
         else
         {
-            std::cout << it->nested->name << endl;
+            cout << it->nested->name << endl;
             tablelist.push_back(it->nested);
         }
     }
 
-    std::cout << setw(120) << setfill('-') << "-" << setfill(' ') << endl;
-    std::cout << endl;
+    cout << setw(120) << setfill('-') << "-" << setfill(' ') << endl;
+    cout << endl;
     for (list<symtable *>::iterator iterator = tablelist.begin(); iterator != tablelist.end();
          ++iterator)
     {
@@ -278,25 +240,22 @@ void symtable::update()
 sym *symtable::lookup(string name)
 {
     sym *s;
-    for (list<sym>::iterator it = table.begin(); it != table.end(); it++)
+    list<sym>::iterator it = table.begin();
+    while (it != table.end())
     {
         if (it->name == name)
             return &*it;
         ;
+        it++;
     }
 
-    // ----------- new symbol to be added to table ---------------
     s = new sym(name);
     s->category = "local";
     table.push_back(*s);
     return &table.back();
 }
 
-//------------------------------------------------------------------//
-//          Overloaded emit function used by the parser             //
-//------------------------------------------------------------------//
-
-//----------------- Emit a three address code TAC and add it to the Quad Array ------------
+//  Overloaded emit function used by the parser
 
 void emit(string op, string result, string arg1, string arg2)
 {
@@ -315,23 +274,8 @@ void emit(string op, string result, float arg1, string arg2)
 
 sym *conv(sym *s, string t)
 {
-    sym *temp = gentemp(new symtype(t));
-    if (s->type->type == "INTEGER")
-    {
-        if (t == "DOUBLE")
-        {
-            emit("EQUAL", temp->name, "int2double(" + s->name + ")");
-            return temp;
-        }
-        else if (t == "CHAR")
-        {
-            emit("EQUAL", temp->name, "int2char(" + s->name + ")");
-            return temp;
-        }
-
-        return s;
-    }
-    else if (s->type->type == "DOUBLE")
+    sym *temp = gentemp(new symboltype(t));
+    if (s->type->type == "DOUBLE")
     {
         if (t == "INTEGER")
         {
@@ -341,6 +285,21 @@ sym *conv(sym *s, string t)
         else if (t == "CHAR")
         {
             emit("EQUAL", temp->name, "double2char(" + s->name + ")");
+            return temp;
+        }
+
+        return s;
+    }
+    else if (s->type->type == "INTEGER")
+    {
+        if (t == "DOUBLE")
+        {
+            emit("EQUAL", temp->name, "int2double(" + s->name + ")");
+            return temp;
+        }
+        else if (t == "CHAR")
+        {
+            emit("EQUAL", temp->name, "int2char(" + s->name + ")");
             return temp;
         }
 
@@ -366,12 +325,12 @@ sym *conv(sym *s, string t)
     return s;
 }
 
-bool typecheck(sym *&s1, sym *&s2)
+bool isSameTypeCheck(sym *&s1, sym *&s2)
 {
     // Check if the symbols have same type or not
-    symtype *type1 = s1->type;
-    symtype *type2 = s2->type;
-    if (typecheck(type1, type2))
+    symboltype *type1 = s1->type;
+    symboltype *type2 = s2->type;
+    if (isSameTypeCheck(type1, type2))
         return true;
     else if (s1 = conv(s1, type2->type))
         return true;
@@ -381,7 +340,7 @@ bool typecheck(sym *&s1, sym *&s2)
         return false;
 }
 
-bool typecheck(symtype *t1, symtype *t2)
+bool isSameTypeCheck(symboltype *t1, symboltype *t2)
 {
     // Check if the symbol types are same or not
     if (t1 != NULL || t2 != NULL)
@@ -391,7 +350,7 @@ bool typecheck(symtype *t1, symtype *t2)
         if (t2 == NULL)
             return false;
         if (t1->type == t2->type)
-            return typecheck(t1->ptr, t2->ptr);
+            return isSameTypeCheck(t1->ptr, t2->ptr);
         else
             return false;
     }
@@ -399,16 +358,14 @@ bool typecheck(symtype *t1, symtype *t2)
     return true;
 }
 
-//-------------------------------------------------------------//
-//            Backpatching and related functions               //
-//-------------------------------------------------------------//
+// Backpatching and related functions
 
 void backpatch(list<int> l, int addr)
 {
     stringstream strs;
     strs << addr;
     string temp_str = strs.str();
-    char *intStr = (char *)temp_str.c_str();                      // convert std::string stream to char array
+    char *intStr = (char *)temp_str.c_str();                      // convert  string stream to char array
     string str = string(intStr);                                  // create a string stream of the integer address
     for (list<int>::iterator it = l.begin(); it != l.end(); it++) // iterate through all the dangline quads
     {                                                             // backpatch the statement with the current address
@@ -428,16 +385,11 @@ list<int> merge(list<int> &a, list<int> &b)
     return a;   // return the merged list
 }
 
-//----------------------------------------------------------------------//
-//          Other helper functions required for TAC generation          //
-//----------------------------------------------------------------------//
+// Other helper functions required for TAC generation
 
-//------------- Type checking and Type conversion functions -------------
-
-expr *convInt2Bool(expr *e) // convert an input expression into boolewan expression
+Expression *convInt2Bool(Expression *e)
 {
-    // Convert any expression to bool
-    if (e->type != "BOOL") // Do the conversion only if the type is not already bool
+    if (e->type != "BOOL")
     {
         e->falselist = makelist(nextinstr());
         emit("EQOP", "", e->loc->name, "0");
@@ -448,12 +400,11 @@ expr *convInt2Bool(expr *e) // convert an input expression into boolewan express
     return e;
 }
 
-expr *convBool2Int(expr *e)
+Expression *convBool2Int(Expression *e)
 {
-    // Convert any expression to bool
     if (e->type == "BOOL")
     {
-        e->loc = gentemp(new symtype("INTEGER"));
+        e->loc = gentemp(new symboltype("INTEGER"));
         backpatch(e->truelist, nextinstr());
         emit("EQUAL", e->loc->name, "true");
         stringstream strs;
@@ -480,48 +431,40 @@ int nextinstr()
     return q.Array.size();
 }
 
-/**
- * GENTEMP
- * -------
- * generates a temporary variable 
- * and insert it in the current 
- * Symbole table 
- * 
- * Parameter
- * ---------
- * symbol type * : pointer to the 
- *                 class of symbol type
- * init : initial value of the structure
- * 
- * Return
- * ------
- * Pointer to the newly created symbol 
- * table entry
+/*
+gentemp method
+-------
+it generates a temporary variable and inserts it in the current Symbole table 
+
+Parameters
+---------
+symbol type * : pointer to the  class of symbol type
+init : initial value of the structure
+
+Returns
+------
+Pointer to the newly created symbol table entry
  */
 
-sym *gentemp(symtype *t, string init)
+sym *gentemp(symboltype *t, string init)
 {
     char n[10];
     sprintf(n, "t%02d", table->count++);
     sym *s = new sym(n);
     s->type = t;
-    s->size = size_type(t);
+    s->size = calculate_size(t);
     s->initial_value = init;
     s->category = "temp";
     table->table.push_back(*s);
     return &table->table.back();
 }
 
-//----------------------------------------------------------------------//
-//           Other helper function for debugging and printing           //
-//----------------------------------------------------------------------//
-
-int size_type(symtype *t)
+int calculate_size(symboltype *t)
 {
     if (t->type == "VOID")
         return 0;
     else if (t->type == "ARR")
-        return t->width * size_type(t->ptr);
+        return t->width * calculate_size(t->ptr);
     else if (t->type == "PTR")
         return POINTER_SIZE;
     else if (t->type == "CHAR")
@@ -535,7 +478,7 @@ int size_type(symtype *t)
     return -1;
 }
 
-string print_type(symtype *t)
+string print_type(symboltype *t)
 {
     if (t == NULL)
         return "null";
