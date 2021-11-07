@@ -18,7 +18,7 @@ string Type;
 symtable *table;
 // points to current symbol
 sym *currentSymbol;
-// Global Symbbol Table
+// Global Symbol Table
 symtable *globalTable;
 
 // Implementation of the Symbol Type Class functions
@@ -33,19 +33,19 @@ quad::quad(string result, string arg1, string op, string arg2) : result(result),
 
 quad::quad(string result, int arg1, string op, string arg2) : result(result), arg2(arg2), op(op) // Constructor
 {
-    stringstream strs;                       // create a string stream
-    strs << arg1;                            // convert int to string by sending it into string stream
-    string temp_str = strs.str();            // store the string value
-    char *intStr = (char *)temp_str.c_str(); // convert the string stream to char array
-    string str = string(intStr);             // get the value of the string
-    this->arg1 = str;                        // store the value in arg1
+    stringstream strss;
+    strss << arg1;
+    string temp_str = strss.str();
+    char *intString = (char *)temp_str.c_str();
+    string finalstr = string(intString);
+    this->arg1 = finalstr;
 }
 
 quad::quad(string result, float arg1, string op, string arg2) : result(result), arg2(arg2), op(op)
 {
-    ostringstream buff;      // Create an output stream buffer of string
-    buff << arg1;            // convert float to string by passing it into string buffer
-    this->arg1 = buff.str(); // store the value in arg1
+    ostringstream strss; // Create an output stream buffer of string
+    strss << arg1;       // convert float to string by passing it into string buffer
+    this->arg1 = strss.str();
 }
 
 //------------- Helper function to print the quads -----------------
@@ -125,10 +125,11 @@ void quad::print()
 
 void quadArray::print()
 {
-    cout << setw(32) << setfill('=') << "=" << endl;
+    cout << setw(31) << setfill('=') << "=" << endl;
     cout << "Quad Translation" << endl;
-    cout << setw(32) << setfill('-') << "-" << setfill(' ') << endl;
-    for (vector<quad>::iterator it = Array.begin(); it != Array.end(); it++)
+    cout << setw(31) << setfill('-') << "-" << setfill(' ') << endl;
+    vector<quad>::iterator it = Array.begin();
+    while (it != Array.end())
     {
         if (it->op == "FUNC")
         {
@@ -138,15 +139,17 @@ void quadArray::print()
         }
         else if (it->op == "FUNCEND")
         {
+            // do nothing;
         }
         else
         {
             cout << "\t" << setw(4) << it - Array.begin() << ":\t";
             it->print();
         }
+        ++it;
     }
 
-    cout << setw(30) << setfill('-') << "-" << endl;
+    cout << setw(29) << setfill('-') << "-" << endl;
 }
 
 sym::sym(string name, string t, symboltype *ptr, int width) : name(name)
@@ -171,7 +174,7 @@ symtable::symtable(string name) : name(name), count(0) {}
 void symtable::print()
 {
     list<symtable *> tablelist;
-    cout << setw(120) << setfill('=') << "=" << endl;
+    cout << setw(119) << setfill('=') << "=" << endl;
     cout << "Symbol Table: " << setfill(' ') << left << setw(50) << this->name;
     cout << right << setw(25) << "Parent: ";
     if (this->parent != NULL)
@@ -179,25 +182,25 @@ void symtable::print()
     else
         cout << "null";
     cout << endl;
-    cout << setw(120) << setfill('-') << "-" << endl;
-    cout << setfill(' ') << left << setw(15) << "Name";
-    cout << left << setw(25) << "Type";
-    cout << left << setw(15) << "Category";
-    cout << left << setw(30) << "Initial Value";
-    cout << left << setw(12) << "Size";
-    cout << left << setw(12) << "Offset";
+    cout << setw(119) << setfill('-') << "-" << endl;
+    cout << setfill(' ') << left << setw(14) << "Name";
+    cout << left << setw(24) << "Type";
+    cout << left << setw(14) << "Category";
+    cout << left << setw(29) << "Initial Value";
+    cout << left << setw(11) << "Size";
+    cout << left << setw(11) << "Offset";
     cout << left << "Nested" << endl;
-    cout << setw(120) << setfill('-') << "-" << setfill(' ') << endl;
+    cout << setw(119) << setfill('-') << "-" << setfill(' ') << endl;
 
     for (list<sym>::iterator it = table.begin(); it != table.end(); it++)
     {
-        cout << left << setw(15) << it->name;
+        cout << left << setw(14) << it->name;
         string stype = print_type(it->type);
-        cout << left << setw(25) << stype;
-        cout << left << setw(15) << it->category;
-        cout << left << setw(30) << it->initial_value;
-        cout << left << setw(12) << it->size;
-        cout << left << setw(12) << it->offset;
+        cout << left << setw(24) << stype;
+        cout << left << setw(14) << it->category;
+        cout << left << setw(29) << it->initial_value;
+        cout << left << setw(11) << it->size;
+        cout << left << setw(11) << it->offset;
         cout << left;
         if (it->nested == NULL)
         {
@@ -210,7 +213,7 @@ void symtable::print()
         }
     }
 
-    cout << setw(120) << setfill('-') << "-" << setfill(' ') << endl;
+    cout << setw(119) << setfill('-') << "-" << setfill(' ') << endl;
     cout << endl;
     for (list<symtable *>::iterator iterator = tablelist.begin(); iterator != tablelist.end();
          ++iterator)
@@ -223,35 +226,41 @@ void symtable::update()
 {
     list<symtable *> tablelist;
     int off = 0;
-    for (list<sym>::iterator it = table.begin(); it != table.end(); it++)
+    list<sym>::iterator it = table.begin();
+    while (it != table.end())
     {
         it->offset = off;
         off = it->offset + it->size;
         if (it->nested != NULL)
             tablelist.push_back(it->nested);
+
+        it++;
     }
 
-    for (list<symtable *>::iterator iterator = tablelist.begin(); iterator != tablelist.end(); ++iterator)
+    list<symtable *>::iterator itr = tablelist.begin();
+    while (itr != tablelist.end())
     {
-        (*iterator)->update();
+        (*itr)->update();
+        ++itr;
     }
 }
 
 sym *symtable::lookup(string name)
 {
-    sym *s;
+    sym *mysym;
+
     list<sym>::iterator it = table.begin();
     while (it != table.end())
     {
         if (it->name == name)
             return &*it;
-        ;
-        it++;
+
+        ++it;
     }
 
-    s = new sym(name);
-    s->category = "local";
-    table.push_back(*s);
+    mysym = new sym(name);
+    mysym->category = "local";
+    table.push_back(*mysym);
     return &table.back();
 }
 
@@ -290,21 +299,6 @@ sym *conv(sym *s, string t)
 
         return s;
     }
-    else if (s->type->type == "INTEGER")
-    {
-        if (t == "DOUBLE")
-        {
-            emit("EQUAL", temp->name, "int2double(" + s->name + ")");
-            return temp;
-        }
-        else if (t == "CHAR")
-        {
-            emit("EQUAL", temp->name, "int2char(" + s->name + ")");
-            return temp;
-        }
-
-        return s;
-    }
     else if (s->type->type == "CHAR")
     {
         if (t == "INTEGER")
@@ -316,6 +310,21 @@ sym *conv(sym *s, string t)
         if (t == "DOUBLE")
         {
             emit("EQUAL", temp->name, "char2double(" + s->name + ")");
+            return temp;
+        }
+
+        return s;
+    }
+    else if (s->type->type == "INTEGER")
+    {
+        if (t == "DOUBLE")
+        {
+            emit("EQUAL", temp->name, "int2double(" + s->name + ")");
+            return temp;
+        }
+        else if (t == "CHAR")
+        {
+            emit("EQUAL", temp->name, "int2char(" + s->name + ")");
             return temp;
         }
 

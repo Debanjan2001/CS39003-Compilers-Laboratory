@@ -26,6 +26,9 @@ assembly: tinyC libass2_19CS10048.a
 	gcc ass6_19CS10048_19CS30014_4.o -o test4 -L. -lass2_19CS10048 -no-pie
 	gcc ass6_19CS10048_19CS30014_5.o -o test5 -L. -lass2_19CS10048 -no-pie
 	gcc ass6_19CS10048_19CS30014_6.o -o test6 -L. -lass2_19CS10048 -no-pie
+	
+	@echo "\n-------------    Running the test files   ---------------\n"
+	@echo "./test<i> for i-th file for 1<=i<=6"
 
 libass2_19CS10048.a:
 	gcc -c ass2_19CS10048.c
