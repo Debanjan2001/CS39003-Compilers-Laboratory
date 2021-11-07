@@ -1,41 +1,54 @@
-int printStr(char *c);
-int printInt(int i);
+/*----------------------------
+CS39003 Compilers Laboratory
+Autumn 2021-2022
+Authors  : Pritkumar Godhani (19CS10048)
+           Debanjan Saha     (19CS30014) 
+Assignment 6 Testfile: 
+----------------------
+Test to check whether we have successfully written and integrated several parts of a compiler or not
+Test 4/6: Testing Recursive Function Calls
+------------------------------------------*/
+
+int printInt(int num);
+int printStr(char *str);
 int readInt(int *eP);
 
-int main () {
-  printStr("\n    #######################################################\n    ##                                                   ##\n    ##      Print first N fibonacci numbers              ##\n    ##         CHECK FOR BINARY OP AND LOOP              ##\n    ##                                                   ##\n    #######################################################\n\n");
-
-
-  printStr("ENTER THE VALUE FOR N (<=45): ");
-  int i,ep;
-  ep=readInt(&i);
-  printStr("\nYOU ENTERED THE VALUE: ");
-  printInt(i);
-
-  printStr("\n\nTHE FIRST ");
-  printInt(i);
-  printStr(" FIBONACCI NUMBERS ARE :\n\n        ");
-
-  int j,a=0,b=1,c;
-
-  if(i>0) printInt(a);
-  printStr(" ");
-  if(i>1) printInt(b);
-  printStr(" ");
-
-  for(j=2;j<i;j++){
-    c = a+b;
-    printInt(c);
-    printStr(" ");
-    a = b;
-    b = c;
-
-    int r=j/10;
-    if(r*10==j){
-      printStr("\n        ");
-    }
+int fact(int n)
+{
+  int ans = 1;
+  if (n < 2)
+  {
+    ans = n;
   }
+  else
+  {
+    ans = n * fact(n - 1);
+  }
+  return ans;
+}
 
-  printStr("\n");
-  return;
+int main()
+{
+
+  printStr("+------------------+\n");
+  printStr("+---- Test 4/6 ----+\n");
+  printStr("+------------------+\n");
+  printStr("Testing Recursive Function Calls...\n\n");
+
+  int n;
+  int eP;
+  printStr("WE WILL BE CALCULATING 'N'-FACTORIAL FOR YOUR INPUT 'N'\n");
+  printStr(">> Enter an integer n: ");
+  n = readInt(&eP);
+
+  int ans = fact(n);
+  printStr("Factorial(");
+  printInt(n);
+  printStr(") = ");
+  printInt(ans);
+  printStr("\n\n");
+
+  printStr("[OK] TEST 4/6 PASSED\n");
+
+  return 0;
 }

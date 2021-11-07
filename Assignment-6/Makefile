@@ -8,7 +8,6 @@ assembly: tinyC libass2_19CS10048.a
 	./tinyC 4 > ass6_19CS10048_19CS30014_quads4.out
 	./tinyC 5 > ass6_19CS10048_19CS30014_quads5.out
 	./tinyC 6 > ass6_19CS10048_19CS30014_quads6.out
-	./tinyC 7 > ass6_19CS10048_19CS30014_quads7.out
 
 	@echo "\n-------------    Generating the object files from assembly code   ---------------\n"
 
@@ -18,7 +17,6 @@ assembly: tinyC libass2_19CS10048.a
 	gcc -c ass6_19CS10048_19CS30014_4.s
 	gcc -c ass6_19CS10048_19CS30014_5.s
 	gcc -c ass6_19CS10048_19CS30014_6.s
-	gcc -c ass6_19CS10048_19CS30014_7.s
 
 	@echo "\n-------------    Compiling the test files   ---------------\n"
 
@@ -28,7 +26,6 @@ assembly: tinyC libass2_19CS10048.a
 	gcc ass6_19CS10048_19CS30014_4.o -o test4 -L. -lass2_19CS10048 -no-pie
 	gcc ass6_19CS10048_19CS30014_5.o -o test5 -L. -lass2_19CS10048 -no-pie
 	gcc ass6_19CS10048_19CS30014_6.o -o test6 -L. -lass2_19CS10048 -no-pie
-	gcc ass6_19CS10048_19CS30014_7.o -o test7 -L. -lass2_19CS10048 -no-pie
 
 libass2_19CS10048.a:
 	gcc -c ass2_19CS10048.c
@@ -105,7 +102,6 @@ clean:
 	   ass6_19CS10048_19CS30014_4.s\
 	   ass6_19CS10048_19CS30014_5.s\
 	   ass6_19CS10048_19CS30014_6.s\
-	   ass6_19CS10048_19CS30014_7.s\
 	   
 	@echo ""
 	@echo "+------+"

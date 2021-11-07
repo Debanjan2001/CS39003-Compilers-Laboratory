@@ -1,45 +1,75 @@
-//This test file extensively checks the expressions both boolean and algebraic
-//and also the funciton calling and returning process in detail
+/*----------------------------
+CS39003 Compilers Laboratory
+Autumn 2021-2022
+Authors  : Pritkumar Godhani (19CS10048)
+           Debanjan Saha     (19CS30014) 
+Assignment 6 Testfile: 
+----------------------
+TestFile to check whether we have successfully written and integrated several parts of a compiler or not
+Test 3/6: Testing Conditional If-Else and Function Calls and Return from functions
+------------------------------------------*/
 
-int printStr(char *c);
-int printInt(int i);
+int printInt(int num);
+int printStr(char *str);
 int readInt(int *eP);
-int a;
-int b = 1;
-char c;
-char d = 'a';
 
-int add (int a, int b) {
-  int ans;
-  int c = 2, d, arr[10];
-  int*p;
-  printStr("    ==== Entered into the function ====\n");
-  ans = a+b;
-  d = 2;
-  if (a>=d) {
-    a++;
+int findMedian(int a, int b, int c)
+{
+  int ans = -1;
+  if (b <= a && a <= c)
+  {
+    ans = a;
   }
-  else {
-    c = a+b;
+  else if (c <= a && a <= b)
+  {
+    ans = a;
   }
-  printStr("    ==== Returning from function   ====\n");
+  else if (a <= b && b <= c)
+  {
+    ans = b;
+  }
+  else if (c <= b && b <= a)
+  {
+    ans = b;
+  }
+  else if (a <= c && c <= b)
+  {
+    ans = c;
+  }
+  else if (b <= c && c <= a)
+  {
+    ans = c;
+  }
   return ans;
 }
-int main () {
-  int c = 2, d, arr[10];
-  int*p;
-  int x, y, z;
+
+int main()
+{
+
+  printStr("+------------------+\n");
+  printStr("+---- Test 3/6 ----+\n");
+  printStr("+------------------+\n");
+  printStr("Testing Conditional If-Else and Function Call...\n\n");
+
   int eP;
-  printStr("\n    ####################################################\n    ##                                                ##\n    ##           Tracing function steps               ##\n    ##      Adding two numbers in a Function          ##\n    ##                                                ##\n    ####################################################\n    \n\n");
-  printStr("\n    Enter two numbers :\n");
-  printStr("\n    Enter first numbers  : ");
-  eP = readInt(&x);
-  printStr("    Enter second numbers : ");
-  eP = readInt(&y);
-  printStr("\n    ==== Passing to the function   ====\n");
-  z = add(x,y);
-  printStr("\n    Sum is equal to : ");
-  printInt(z);
-  printStr("\n");
-  return c;
+  int a, b, c;
+  printStr("Please Enter 3 Integers\n\n");
+  printStr(">> Enter 1st Number: ");
+  a = readInt(&eP);
+  printStr(">> Enter 2nd Number: ");
+  b = readInt(&eP);
+  printStr(">> Enter 3rd Number: ");
+  c = readInt(&eP);
+
+  printStr("\nMAKING A FUNCTION CALL TO CALCULATE MEDIAN...\n");
+  int median = findMedian(a, b, c);
+  printStr("SUCCESSFULLY RETURNED FROM THE FUNCTION...\n");
+
+  printStr("Median Of the three numbers is: ");
+  printInt(median);
+  printStr("\n\n");
+
+  printStr("[OK] TEST 3/6 PASSED\n");
+
+  return 0;
 }

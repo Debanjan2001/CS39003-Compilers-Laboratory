@@ -1,51 +1,42 @@
-//test file to check basic statements, expression, readInt and printInt library 
-//functions created in assignment 2
-//also checks the recursive fibonacci function to check the function call and return methodology
+/*----------------------------
+CS39003 Compilers Laboratory
+Autumn 2021-2022
+Authors  : Pritkumar Godhani (19CS10048)
+           Debanjan Saha     (19CS30014)
+Assignment 6 Testfile:
+----------------------
+Test to check whether we have successfully written and integrated several parts of a compiler or not
+Test 5/6: Testing Arrays, Loops and Integer Arithmetic
+------------------------------------------*/
 
-
-int printStr(char *c);
-int printInt(int i);
+int printInt(int num);
+int printStr(char *str);
 int readInt(int *eP);
 
+int main()
+{
 
-int fib(int a){
-  printStr("\nENTERING THE FUNCTION FOR ( I ) : ");
-  printInt(a);
-  int b=a-1,c,d;
-  if(b<=0) return 1;
-  else {
-    c=fib(b);
-    b=b-1;
-    d=fib(b);
-    c=c+d;
-    return c;
-  }
-  return 1;
-}
+  printStr("+------------------+\n");
+  printStr("+---- Test 5/6 ----+\n");
+  printStr("+------------------+\n");
+  printStr("Testing Arrays, Loops and Integer Arithmetic...\n\n");
 
-int main () {
-  int a = 5, b = 2, c;
-  int read;
-  read = 5;
-  int eP;
-  if (a<b) {
-    a++;
+  printStr("WE HAVE AN ARRAY OF DIMENSION 10.\nWE WILL STORE THE CUBES OF FIRST 10 NATURAL NUMBERS AND PRINT THEM FROM ARRAY...\n");
+  int arr[10];
+  int i;
+  for (i = 1; i <= 10; i++)
+  {
+    int cube = i * i * i;
+    arr[i - 1] = cube;
+    printStr("Cube of ");
+    printInt(i);
+    printStr(" = ");
+    printInt(arr[i - 1]);
+    printStr("\n");
   }
-  else {
-    c = a+b;
-  }
-
-  printStr("\n    #####################################################\n    ##                                                 ##\n    ##       RECURSIVE FIBONACCI SIMULATION            ##\n    ##            TEST FUNCTION CALLS                  ##\n    ##            AND LIBRARY MYL.H                    ##\n    ##                                                 ##\n    #####################################################\n    \n");
-  printStr("ENTER THE NUMBER N FOR FIBOACCI: ");
-  eP = readInt(&read);
-  printStr("ENTERED NUMBER ");
-  c = printInt(read);
   printStr("\n");
 
-  printStr("------------TESTING RECURSIVE FIBOACCI-----------\nENTERING THE FUNCTION: \n");
-  int out=0;
-  out=fib(read);
-  printStr("\n\nReturned from recursive fibonacci function successfully!!\n");
-  printStr("----------- SUCCESSFULLY TERMINATED ----------");
+  printStr("[OK] TEST 5/6 PASSED\n");
 
+  return 0;
 }

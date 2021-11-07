@@ -1,44 +1,46 @@
-
-//This testfile checks the functioning of the library functions printInt, readInt and printStr
+/*----------------------------
+CS39003 Compilers Laboratory
+Autumn 2021-2022
+Authors  : Pritkumar Godhani (19CS10048)
+           Debanjan Saha     (19CS30014) 
+Assignment 6 Testfile: 
+----------------------
+TestFile to check whether we have successfully written and integrated several parts of a compiler or not
+Test 2/6: testing ReadInt and PrintInt library methods written in assignment-2
+------------------------------------------*/
 
 int printInt(int num);
-int printStr(char * c);
+int printStr(char *str);
 int readInt(int *eP);
-
-// user-defined function (with pointer parameters)
-// return an int value
-int test(int *a)
-{
-    return a;
-}
 
 int main()
 {
-    int a,b;
-    int e;
-    
-    printStr("        #########################################################\n        ##                 TESTING FUNCTIONS                   ##\n        #########################################################        \n");
-    
-    b = 3;
 
-    // checking printStr() and printStr()
-    printStr("\n\n        Passing parameter to function :\n        int test(int *a)    \n");
-    printStr("\n        Value passed to function: ");
-    printInt(b);
-    printStr("\n");
-    
-    a = test(b);
-    printStr("\n        Address returned from function is: ");
+    printStr("+------------------+\n");
+    printStr("+---- Test 2/6 ----+\n");
+    printStr("+------------------+\n");
+    printStr("Testing Methods - ReadInt, PrintInt...\n\n");
+
+    int a;
+    printStr(">> Enter your desired integer: ");
+    int readIntegerFlag;
+    a = readInt(&readIntegerFlag);
+
+    if (readIntegerFlag == OK)
+    {
+
+        printStr("READING...\nRETURNED FLAG =>[OK]...SUCCESS!\n");
+    }
+    else
+    {
+        printStr("UNSUCCESSFUL! TRY AGAIN");
+    }
+
+    printStr("The integer obtained from you is: ");
     printInt(a);
-    printStr("\n");
-    
-    printStr("\n        #####################################################\n        ##              READ AN INTEGER                    ##\n        ##                TESTING I/O                      ##\n        #####################################################\n        \n");
-    printStr("\nEnter an Integer : ");
-    e = readInt(&b);
-    printStr("The integer that was read is : ");
-    printInt(b);
-    printStr("\n");
-    
+    printStr("\n\n");
+
+    printStr("[OK] TEST 2/6 PASSED\n");
 
     return 0;
 }
