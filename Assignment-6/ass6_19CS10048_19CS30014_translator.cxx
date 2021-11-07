@@ -434,7 +434,7 @@ list<int> merge(list<int> &a, list<int> &b)
 
 //------------- Type checking and Type conversion functions -------------
 
-expr *convertInt2Bool(expr *e) // convert an input expression into boolewan expression
+expr *convInt2Bool(expr *e) // convert an input expression into boolewan expression
 {
     // Convert any expression to bool
     if (e->type != "BOOL") // Do the conversion only if the type is not already bool
@@ -448,7 +448,7 @@ expr *convertInt2Bool(expr *e) // convert an input expression into boolewan expr
     return e;
 }
 
-expr *convertBool2Int(expr *e)
+expr *convBool2Int(expr *e)
 {
     // Convert any expression to bool
     if (e->type == "BOOL")

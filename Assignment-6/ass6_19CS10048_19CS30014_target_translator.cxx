@@ -10,8 +10,8 @@ int labelCount = 0;
 map<int, int> labelMap;
 ofstream out;
 vector<quad> quadArr;
-string assmfilename = "asgn6_19CS10048_19CS30014_";
-string inputfile = "asgn6_19CS10048_19CS30014_test";
+string assmfilename = "ass6_19CS10048_19CS30014_";
+string inputfile = "ass6_19CS10048_19CS30014_test";
 
 void computeActivationRecord(symtable *ST)
 {
@@ -378,7 +378,7 @@ void genAssembly()
             {
                 symtable *t = globalTable->lookup(arg1)->nested;
                 int i = 0, j = 0;
-                for (list<sym>::iterator it = t->table->begin(); it != t->table.end(); it++)
+                for (list<sym>::iterator it = t->table.begin(); it != t->table.end(); it++)
                 {
                     i = distance(t->table.begin(), it);
                     if (it->category == "param")
@@ -428,7 +428,7 @@ void genAssembly()
                 assmFile << "\t.type\t" << result << ", @function" << endl;
                 assmFile << result << ": \n";
                 assmFile << ".LFB" << labelCount << ":" << endl;
-                assmFile << "\tcfi_startproc\n";
+                assmFile << "\t.cfi_startproc\n";
                 assmFile << "\tpushq \t%rbp" << endl;
                 assmFile << "\t.cfi_def_cfa_offset 8" << endl
                          << "\t.cfi_offset 5, -8" << endl;
@@ -479,7 +479,7 @@ void genAssembly()
             }
             else
             {
-                assmFile << "op";
+                // assmFile << "op";
             }
 
             assmFile << endl;

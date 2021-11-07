@@ -9,7 +9,7 @@
 
     extern int yylex();
     void yyerror(const char* s);
-    extern string var_type;
+    extern string Type;
     vector<string> allstr;
     using namespace std;
 
@@ -907,11 +907,11 @@ storage_class_specifier:
 type_specifier:
                 VOID
                 {
-                    var_type = "VOID";
+                    Type = "VOID";
                 }
                 | CHAR
                 {
-                    var_type = "CHAR";
+                    Type = "CHAR";
                 }
                 | SHORT
                 {
@@ -919,7 +919,7 @@ type_specifier:
                 }
                 | INT
                 {
-                    var_type = "INTEGER";
+                    Type = "INTEGER";
                 }
                 | LONG
                 {
@@ -931,7 +931,7 @@ type_specifier:
                 }
                 | DOUBLE
                 {
-                    var_type = "DOUBLE";
+                    Type = "DOUBLE";
                 }
                 | SIGNED
                 {
@@ -1071,7 +1071,7 @@ declarator:
 direct_declarator: 
                     IDENTIFIER
                     {
-                        $$ = $1->update(new symboltype(var_type));
+                        $$ = $1->update(new symboltype(Type));
                         currentSymbol = $$;
                     }
                     | '(' declarator ')'
