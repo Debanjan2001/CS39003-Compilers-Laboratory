@@ -1,3 +1,11 @@
+/*----------------------------
+CS39003 Compilers Laboratory
+Autumn 2021-2022
+Authors  : Pritkumar Godhani (19CS10048)
+           Debanjan Saha     (19CS30014) 
+Assignment 6 : Target Translator
+------------------------------------------*/
+
 #include "ass6_19CS10048_19CS30014_translator.h"
 #include <bits/stdc++.h>
 

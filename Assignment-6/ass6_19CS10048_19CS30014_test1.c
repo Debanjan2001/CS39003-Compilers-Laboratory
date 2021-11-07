@@ -1,25 +1,28 @@
-//This testfile checks the functioning of the library functions printInt, readInt and printStr
+/*----------------------------
+CS39003 Compilers Laboratory
+Autumn 2021-2022
+Authors  : Pritkumar Godhani (19CS10048)
+           Debanjan Saha     (19CS30014) 
+Assignment 6 Testfile: 
+----------------------
+Test to check whether we have successfully written and integrated several parts of a compiler or not
+Simply printing Hello World in our TinyC
+------------------------------------------*/
 
 int printInt(int num);
-int printStr(char * c);
-int readInt(int *eP);
+int printStr(char *str);
+int readInt(int *num_pointer);
 
 int main()
 {
-    int a,b;
-    int *e;
-    
-    printStr("\n        ######################################################\n        ##                                                  ##\n        ##         Print first 20 natural numbers           ##\n        ##                   (LOOP)                         ##\n        ##                                                  ##\n        ######################################################\n\n");
-    
-    b = 1;
-    e = &b;
 
-    printStr("        ");
-    for(a=0;a<20;a++){
-        printInt(b);
-        printStr(" ");
-        b = b+1;
-    }
+    printStr("+------------------+\n");
+    printStr("+---- Test 1/6 ----+\n");
+    printStr("+------------------+\n");
+    printStr("Testing Method PrintStr...\n");
+    printStr("Hello World!\n\n");
+
+    printStr("[OK] TEST 1/6 PASSED\n");
 
     return 0;
 }
